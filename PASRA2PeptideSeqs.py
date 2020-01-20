@@ -3,19 +3,6 @@ import numpy as np
 import subprocess
 from Bio.Seq import Seq
 import bisect
-
-def createUniqueIntronList(csvfile, outpath):
-    # Read in chromosome locations and TPM values (columns 1 and 4) from KMA output file
-    chromlocs = np.loadtxt(csvfile, dtype=str, delimiter=',', skiprows=1, usecols=[1,3])
-    # Only extract unique chromosomal locations
-    _, indices = np.unique(chromlocs[:,0], return_index=True)
-    uniquelocs = chromlocs[indices,:]
-    uniquelocs = np.core.defchararray.strip(uniquelocs, '"')  # Strip "s from locations
-    # Write contents of uniquelocs array to file (for reference later)
-    filepath = outpath+'/'+'uniqueIntronList.txt'
-    np.savetxt(filepath, uniquelocs, fmt='%s', delimiter='\t')
-    # Return unique list of intron locations and corresponding TPM values
-    return list(uniquelocs[:,0]),list(uniquelocs[:,1])
         
 def manualTranslate(fastasequence):
     # Initialize codon table and list of peptides
@@ -214,23 +201,14 @@ def getSeqs(nAAs, outpath):
     
 # Main function that processes command line input and calls other functions
 def main():
-    # Check to make sure we have the right number of inputs
+    # Check to make sure the number of inputs
     if len(sys.argv) != 4:
         print('Error: incorrect number of inputs.')
         print('Please input the AA window you want, an outfile path, and a polyA site file.')
         sys.exit()
-    # Store inputs
-#        kmafile = sys.argv[1]
     window = int(sys.argv[1])
     outpath = sys.argv[2]
-#    uniqueIntrons = open("/data2/renxi/bin/retained-intron-neoantigen-pipeline/text.txt", "r")
-    #_, indices = np.unique(chromlocs, return_index=True)
-    #uniquelocs = chromlocs[indices,:]
-#        uniqueIntrons = np.core.defchararray.strip(uniquelocs, '"')  # Strip "s from locations
-        # Create unique intron output file
-        #uniqueIntrons,TPMvals = createUniqueIntronList(kmafile, outpath)
-#        window = '9'
-        # Create nucleotide sequences file
+
     getSeqs(window, outpath)
 
 if __name__ == '__main__':
