@@ -108,7 +108,7 @@ for file in $(cat ${files}); do
 	for entry in $(cut -f4 ${id}_peptideSeqsFASTA_header_passed4) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${id}.2.fa ; done
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print ">s="$3"\t"$2}' | xargs -n1 > peptideSeqsFASTA_input_of_${id}
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print "s_"$3"\t"substr($1,4,length($1))}' | sed 's/\tr/\tchr/g' > key_file_of_${id}
-	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l 9 -s -xls -xlsfile ${file_path}${id}_NETMHCpan_out.xls -a ${hla1} -BA > "/data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/intron_polyadenylated_peptide_for_MS/logs/${id}"
+	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l ${window} -s -xls -xlsfile ${file_path}${id}_NETMHCpan_out.xls -a ${hla1} -BA > "/data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/intron_polyadenylated_peptide_for_MS/logs/${id}"
 	awk '{print $3"\t"$0}' ${id}_NETMHCpan_out.xls > tmp_${id}
 	awk -v OFS='\t' 'NR==FNR {h[$1] = $2;next} {print h[$1],$0}' key_file_of_${id} tmp_${id} | awk '{if ($NF != 0) print}' | tail -n+3 | grep -v ',CD99,' > ${id}_output
 	
@@ -124,8 +124,8 @@ for file in $(cat ${files}); do
 	awk -F'\t' -v OFS='\t' '{split($1,a,","); print a[1],a[2],a[4]"\t"a[3]"\t"$4}' ${id}_output | awk -F"\t" '!seen[$5]++' > ${id}.reliables
 	
 ## filter with uniprot
-	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer}
-        java -jar /data/11000039/e0149673/scratch/bin/java_file/PeptideMatchCMD_1.0.jar -a query -i /data/11000039/e0149673/scratch/bin/sprot_index_human/ -Q ${file_path}${id}.reliables.fa -e -o ${id}.reliables.fa.out
+	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer} ${path}
+        java -jar ${path}/PeptideMatchCMD_1.0.jar -a query -i ${path}/sprot_index_human/ -Q ${file_path}${id}.reliables.fa -e -o ${id}.reliables.fa.out
         for line in $(grep 'No match' ${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ ${id}.reliables >> ${id}.reliables.filtered_by_uniprot ; done
 	) &
 done
