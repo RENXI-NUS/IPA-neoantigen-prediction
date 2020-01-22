@@ -71,9 +71,9 @@ done
 
 for file in $(cat ${files}) ; do
         id=$(echo "${file}" | cut -d "." -f1)
-        bedtools intersect -wa -wb -v -a <( awk '{split($1,a,/=|:|;|,/); print a[2]"\t"a[5]"\t"a[5]"\t"$1"\t0\t"a[6]}' ${id}_peptideSeqsFASTA_header_passed1 ) -b ${path}/IPA_events_from_GTEx_normal_for_filtering_repl2 > ${id}_peptideSeqsFASTA_header_passed2
-        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed2 -b ${path}/IPA_events_from_tcga_normal_for_filtering_repl2 > ${id}_peptideSeqsFASTA_header_passed3
-        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed3 -b ${path}/IPA_events_from_blueprint_normal_for_filtering_repl2 > ${id}_peptideSeqsFASTA_header_passed4
+        bedtools intersect -wa -wb -v -a <( awk '{split($1,a,/=|:|;|,/); print a[2]"\t"a[5]"\t"a[5]"\t"$1"\t0\t"a[6]}' ${id}_peptideSeqsFASTA_header_passed1 ) -b ${path}/IPA_events_from_GTEx_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed2
+        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed2 -b ${path}/IPA_events_from_tcga_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed3
+        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed3 -b ${path}/IPA_events_from_blueprint_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed4
 done
 
 ## intronic neo-epitope prediction
