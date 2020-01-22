@@ -36,7 +36,7 @@ awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$9,$5,$1
 awk -F"\t" '!seen[$1, $2, $(NF-2)]++' input_for_peptideseqs_of_1_${cancer} > ${cancer}_input_for_peptideseqs_uniq
 
 ## generate IPA derived peptide sequences
-${python} PASRA2PeptideSeqs.py "${window}" "${file_path}" ${cancer}_input_for_peptideseqs_uniq
+${python} GeneratePeptide.py "${window}" "${file_path}" ${cancer}_input_for_peptideseqs_uniq
 grep '>s=' peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa > peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq_header
 
 ## filter out the IPA without significant coverage drop between upstream and downstream of the IPA site
