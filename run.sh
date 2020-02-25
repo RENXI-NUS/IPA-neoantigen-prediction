@@ -9,14 +9,14 @@ Usage: $pname [full path for the prediction] [peptide length] [cancer name] [ful
 [current full path]		STRING without space; use _ for space.Tab file only.
 [peptide length]		The length of peptide to be used for binding affinity prediction. 
 [cancer name]		The cancer name for prediction. Please use TCGA abbreviation, e.g. BLCA BRCA COAD GBM LAML LIHC LUAD LUSC OV PRAD SKCM STAD
-[full path for the bam files]		The corresponding full path for the bam files of the cancers. STRING without space; use _ for space.Tab file only
+[full path for the bam files]		The corresponding full path for the unsorted bam files (i.e. sort by name) of the cancers. STRING without space; use _ for space.Tab file only
 [outputfile path]		STRING without space; use _ for space.Tab file only.\n
 "; exit 1; }
 
 if [ $2 -lt 8 ] || [ $2 -gt 14 ]; then
 
 printf "\nSequence length must be from 8 to 14 amino acids\n
-Usage: $pname [full path for input fasta file] [sequence length] [number of sequence] [output file name]\n\n"
+Usage: $pname [full path for the prediction] [peptide length] [cancer name] [full path for the bam file] [output path]\n\n"
 
 exit 1
 
