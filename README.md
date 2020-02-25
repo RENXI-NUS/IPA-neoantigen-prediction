@@ -2,7 +2,7 @@
 
 Synopsis:
 
-This pipeline can predict the IPA derived neoantigens based on large-scale RNA-seq datasets.
+This pipeline can predict the IPA-derived neoantigens based on large-scale RNA-seq datasets.
 
 
 Usage:
