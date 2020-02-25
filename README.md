@@ -1,6 +1,6 @@
 # Intronic polyadenylated (IPA) neoantigen prediction
 
-This pipeline can predict the IPA derived neoantigens based on large-scale RNA-seq data.
+This pipeline can predict the IPA derived neoantigens based on large-scale RNA-seq datasets.
 
 In order to run, please:
 1) Download and install bedtools (https://bedtools.readthedocs.io/en/latest/content/installation.html) and featureCounts (http://subread.sourceforge.net/).
