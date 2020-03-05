@@ -2,6 +2,8 @@
 
 set -u
 
+bash configure.sh
+
 pname=$(basename $0)
 [ $# -ne 5 ] && { printf "Prediction of neoantigens derived from intronic polyadenylation.
 Usage: $pname [full path for the prediction] [peptide length] [cancer name] [full path for the bam file] [output path]
@@ -23,7 +25,7 @@ exit 1
 fi
 
 cd $1
-#for cancer in "BLCA" "BRCA" "COAD" "GBM" "LAML" "LIHC" "LUAD" "LUSC" "OV" "PRAD" "SKCM" "STAD" ; do
-bash "$1"/run_PASRA_TCGA.sh "$1" "$2" "$3" "$4" "$5" > log.out 
+
+bash "$1"/predict_polyA_spanning_reads.sh "$1" "$2" "$3" "$4" "$5" > log.out 
 bash "$1"/run_neoepitope_pipeline.sh "$1" "$2" "$3" "$4" "$5" > log.out
-#done
+
