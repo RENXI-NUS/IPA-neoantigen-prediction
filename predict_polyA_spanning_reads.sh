@@ -1,14 +1,14 @@
 #!/bin/bash
 current_path=$1
-cancer_type=$3
+dataset_name=$3
 bam_path=$4
 path=$5
-mkdir -p "${path}"/"${cancer_type}"
+mkdir -p "${path}"/"${dataset_name}"
 cd ${path}/"${cancer_type}"
 list="$1/TCGA_${cancer_type}.list"
 
 for line in $(tac ${list}); do
-	if [ ! -f "${path}/${cancer_type}/${line}.unsorted.bam_out_PAS_sites_from_softclipping_based_on_S.txt" ]; then
+	if [ ! -f "${path}/${dataset_name}/${line}.unsorted.bam_out_PAS_sites_from_softclipping_based_on_S.txt" ]; then
 		N=24
         	if (( i % N == 0 )); then
                 	wait
