@@ -4,8 +4,8 @@ dataset_name=$3
 bam_path=$4
 path=$5
 mkdir -p "${path}"/"${dataset_name}"
-cd ${path}/"${cancer_type}"
-list="$1/TCGA_${cancer_type}.list"
+cd ${path}/"${dataset_name}"
+list="$1/${dataset_name}.list"
 
 for line in $(tac ${list}); do
 	if [ ! -f "${path}/${dataset_name}/${line}.unsorted.bam_out_PAS_sites_from_softclipping_based_on_S.txt" ]; then
