@@ -1,9 +1,4 @@
 #!/bin/bash
-#PBS -N test_pipeline
-#PBS -l walltime=24:00:00
-#PBS -P 11000039 
-#PBS -l select=1:ncpus=24
-
 set -u
 
 bash configure.sh
