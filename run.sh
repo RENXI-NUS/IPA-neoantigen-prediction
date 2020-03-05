@@ -6,7 +6,7 @@ bash configure.sh
 
 pname=$(basename $0)
 
-$result_file="$1/$3"
+$result_file="$5/$3"
 mkdir -p "$result_file"
 
 [ $# -ne 5 ] && { printf "Prediction of neoantigens derived from intronic polyadenylation.
@@ -15,7 +15,7 @@ Usage: $pname [full path for the prediction] [peptide length] [cancer name] [ful
 [current full path]		STRING without space; use _ for space.Tab file only.
 [peptide length]		The length of peptide to be used for binding affinity prediction. 
 [dataset name]		The dataset name for prediction. Please use TCGA abbreviation, e.g. BLCA BRCA COAD GBM LAML LIHC LUAD LUSC OV PRAD SKCM STAD
-[full path for the bam files]		The corresponding full path for the unsorted bam files (i.e. sort by name) of the cancers. STRING without space; use _ for space.Tab file only
+[full path for the bam files and raw fastq files]		The corresponding full path for the unsorted bam files (i.e. sort by name) and raw fastq files of the analyzed dataset. STRING without space; use _ for space.Tab file only
 [outputfile path]		STRING without space; use _ for space.Tab file only.\n
 "; exit 1; }
 
