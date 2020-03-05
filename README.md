@@ -22,5 +22,4 @@ In order to run, please:
 7) Input: 
     -  BAM files sorted by name are copyed within the same directory (output file from STAR is preferred and the name of the file changed to *.unsorted.bam)
     -  FASTQ files (for HLA typing) are copyed within the same directory (the naming of BAM file and FASTQ file should be consistent)
-8) Configure the configure.sh file for runing pipline.
-9) Start the pipeline with run.sh file.
+8) Start the pipeline with run.sh file.
