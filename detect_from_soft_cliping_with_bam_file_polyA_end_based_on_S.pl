@@ -3,7 +3,7 @@ use strict;
 use warnings;
 my $sam_file=shift;
 my $name=shift;
-my $out_PAS_file=$name."_out_PAS_sites_from_softclipping_based_on_S.txt";
+my $out_PAS_file=$name."_potential_polyA_sites_from_softclipped_reads.txt";
 my @quality_list;
 my $char;
 
