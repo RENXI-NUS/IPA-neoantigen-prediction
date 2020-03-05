@@ -13,7 +13,7 @@ python=/data/11000039/e0149673/scratch/bin/anaconda2/envs/py2/bin/python
 netMHCpan=/data/11000039/e0149673/scratch/bin/software/netMHCpan-4.0/netMHCpan
 
 ## identify intronic PASs 
-files="${path}/${cancer}.list"
+files="${file_path}/${cancer}.list"
 for file in $(cat ${files}); do awk '$4 !~ /N/' ${file}_potential_polyA_sites_from_softclipped_reads.txt >> ${file}.0; done ##remove splicing reads
 for file in $(cat ${files}); do awk 'NR==FNR{a[$2]++; next} a[$2]>=2' <(sort -k3,3r -k1,1 -k2,2n ${file}.0) <(sort -k3,3r -k1,1 -k2,2n ${file}.0) > ${file}.0.1; done	# print the PASs that supported by at least two soft-clipping reads
 for file in $(cat ${files}); do sort -k3,3r -k1,1 -k2,2n ${file}.0.1 | awk '{if ($3 == "+") print $1"\t"$2"\t"$2+1"\t"$4"\t0\t"$3}' > ${file}.0.1.output; done
