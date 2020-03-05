@@ -14,7 +14,7 @@ for line in $(tac ${list}); do
                 	wait
         	fi
 	        ((i++))
-		(perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl ${bam_path}/${line}.unsorted.bam ${line}.unsorted.bam
-	        perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl ${bam_path}/${line}.unsorted.bam ${line}.unsorted.bam ) &
-#	fi
+		(perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${bam_path}/${line}.unsorted.bam" "${path}/${line}.unsorted.bam"
+                perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${bam_path}/${line}.unsorted.bam" "${path}/${line}.unsorted.bam" ) &
+		#	fi
 done
