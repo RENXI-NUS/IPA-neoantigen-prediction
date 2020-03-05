@@ -16,10 +16,8 @@ In order to run, please:
 6) Download all the four reference files from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing.
 
     A. splicing junction coordinates derived from patients of 12 TCGA cancers. It could be customizedly generated and substituted by STAR output *.sj.out.tab  
-    B. BED fromat file containing all introns from GENCODE annotation
-    
-    C. File of intron boundaries with frame information from positive strand
-    
+    B. BED fromat file containing all introns from GENCODE annotation    
+    C. File of intron boundaries with frame information from positive strand    
     D. File of intron boundaries with frame information from negative strand
 7) Input: bam files sorted by name are copyed within the same directory (output file from STAR is preferred)
           fastq files for HLA typing 
