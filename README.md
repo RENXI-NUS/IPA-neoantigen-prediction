@@ -21,5 +21,5 @@ In order to run, please:
     D. File of intron boundaries with frame information from negative strand
 7) Input: bam files sorted by name are copyed within the same directory (output file from STAR is preferred)
           fastq files for HLA typing 
-8) Configure files for runing pipline 
+8) Configure the configure.sh file for runing pipline 
 9) Start the pipeline with run.sh file.
