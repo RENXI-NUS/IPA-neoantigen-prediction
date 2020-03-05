@@ -15,7 +15,7 @@ In order to run, please:
 5) Download Seq2HLA (https://github.com/TRON-Bioinformatics/seq2HLA) and change the path in run_Seq2HLA.sh file (line 106) after using it for HLA typing.
 6) Download all the four reference files from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing.
 
-    A. splicing junction coordinates derived from patients of 12 TCGA cancers. It could be customizedly generated and substituted by STAR output *.sj.out.tab  
+    A. splicing junction coordinates derived from patients of 12 TCGA cancers. This file could be customizedly generated and substituted by processing the STAR output files ending *.sj.out.tab
     B. BED fromat file containing all introns from GENCODE annotation    
     C. File of intron boundaries with frame information from positive strand    
     D. File of intron boundaries with frame information from negative strand
