@@ -2,8 +2,8 @@
 set -u
 
 bash configure.sh
-cd $1
+cd $curr_dir
 
-bash "$1"/run_Seq2HLA.sh "$1" "$2" "$3" "$4" "$5" > log.out 
-bash "$1"/predict_polyA_spanning_reads.sh "$1" "$2" "$3" "$4" "$5" > log.out 
-bash "$1"/run_neoepitope_pipeline.sh "$1" "$2" "$3" "$4" "$5" > log.out
+bash "$1"/run_Seq2HLA.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out
+bash "$1"/predict_polyA_spanning_reads.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out
+bash "$1"/run_neoepitope_pipeline.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out
