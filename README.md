@@ -18,6 +18,6 @@ In order to run, please:
     D: File of intron boundaries with frame information from negative strand
 4) Input: 
     -  BAM files sorted by name are copyed within the same directory (output file from STAR is preferred and the name of the file changed to *.unsorted.bam)
-    -  FASTQ files (for HLA typing) are copyed within the same directory (the naming of BAM file and FASTQ file should be consistent)
+    -  FASTQ files (for HLA typing) are copyed within the same directory (the naming of BAM file and corresponding FASTQ file should be consistent)
 5) Configure the run.config file according to the instruction of each input.
 6) Start the pipeline with run.sh file.
