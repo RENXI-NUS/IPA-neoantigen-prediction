@@ -8,6 +8,7 @@ cd ${current_path}
 python_script=`grep py2 run.config | sed s/.*\=//`
 seq2HLA=`grep seq2HLA_script run.config | sed s/.*\=//`
 
+mkdir -p "${path}"
 cd ${path}
 mkdir -p "${dataset_name}"
 
