@@ -16,7 +16,7 @@ mkdir -p "${output_dir}/${dataset_name}"
 logs="${output_dir}/logs"
 mkdir -p "$logs"
 cd ${bam_path}
-ls *"bam" > "${path}/${dataset_name}.list"
+ls *"bam" > "${output_dir}/${dataset_name}.list"
 
 cd $curr_dir
 
