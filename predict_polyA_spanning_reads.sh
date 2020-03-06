@@ -5,7 +5,7 @@ bam_path=$4
 path=$5
 mkdir -p "${path}"/"${dataset_name}"
 cd ${path}/"${dataset_name}"
-list="$5/${dataset_name}.list"
+list="${path}/${dataset_name}.list"
 
 for line in $(tac ${list}); do
 #	if [ ! -f "${path}/${dataset_name}/${line}_potential_polyA_sites_from_softclipped_reads.txt" ]; then
