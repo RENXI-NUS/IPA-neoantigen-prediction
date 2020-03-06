@@ -12,7 +12,7 @@ In order to run, please:
 2) Change the python (version 2) path in run_neoepitope_pipeline.sh file (line 12).
 3) Download NetMHCPan-4.0 (http://www.cbs.dtu.dk/services/NetMHCpan/) and change paths in runNetMHCpan.py file (line 13).
 4) Download twoBitToFa utility from UCSC genome browser (https://genome.ucsc.edu/goldenpath/help/twoBit.html) and change the path in GeneratePeptide.py file (line 173).
-5) Download Seq2HLA (https://github.com/TRON-Bioinformatics/seq2HLA) and change the path in run_Seq2HLA.sh file (line 10,11) for HLA typing.
+5) Download Seq2HLA (https://github.com/TRON-Bioinformatics/seq2HLA) and change the path in run_Seq2HLA.sh file (line 17,18) for HLA typing.
 6) Download all the four reference files from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing.
 
     A. splicing junction coordinates derived from patients of 12 TCGA cancers. This file could be customizedly generated and substituted by processing the STAR output files ending *.sj.out.tab    
