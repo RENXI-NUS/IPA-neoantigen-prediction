@@ -25,11 +25,11 @@ mergeBed -d 24 -s -i ${cancer}.cluster.sorted.bed -c 4,5,6 -o collapse,sum,disti
 for file in $(cat ${files}); do cat ${file}.0.1.output >> ${cancer}_all_SC_reads ; done
 perl findPeak.cluster.pl ${cancer}.cluster.merged.bed ${cancer}_all_SC_reads ${cancer}.cluster.merged_withPeak.bed
 awk -F ',' '{if (NF >= 1 ) print }' ${cancer}.cluster.merged_withPeak.bed | awk '{print "chr"$1"\t"$7"\t"$8"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed ##only keep the polyA clusters that supported by at least 2 samples. But if there is only one sample to be analyzed, then change it to one
-bedtools intersect -wa -wb -a ${cancer}.cluster.merged_withPeak.reliable.bed -b hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron
+bedtools intersect -wa -wb -a ${cancer}.cluster.merged_withPeak.reliable.bed -b B.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron
 bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron) -b <(sort -k6,6r -k1,1 -k2,2n gencode_PASs_extended_by_100_filtered ) > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1  ## filter the identified IPA with GENCODE annotation
-bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1) -b <(sort -k6,6r -k1,1 -k2,2n splicing_coordinates_TCGA_12_cancers ) > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3  ## filter out the coordinates if has at least 6 junction reads
-bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n EncodeGencode_merged_intron_selected_excluded_exon_+) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer}
-bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n EncodeGencode_merged_intron_selected_excluded_exon_-) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer}
+bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1) -b <(sort -k6,6r -k1,1 -k2,2n A.splicing_coordinates_TCGA_12_cancers ) > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3  ## filter out the coordinates if has at least 6 junction reads
+bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n C.EncodeGencode_merged_intron_selected_excluded_exon_+) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer}
+bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n D.EncodeGencode_merged_intron_selected_excluded_exon_-) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer}
 awk -F'\t' -v OFS='\t' '{ if ($6 == "+") print $1,$2,$10,$13,$14,$15,$6,$8,$5,$11}' EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer} > input_for_peptideseqs_of_1_${cancer}
 awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$9,$5,$11}' EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer} >> input_for_peptideseqs_of_1_${cancer}
 awk -F"\t" '!seen[$1, $2, $(NF-2)]++' input_for_peptideseqs_of_1_${cancer} > ${cancer}_input_for_peptideseqs_uniq
@@ -68,12 +68,12 @@ for file in $(cat ${files}); do
 	) &
 done
 
-for file in $(cat ${files}) ; do
-        id=$(echo "${file}" | cut -d "." -f1)
-        bedtools intersect -wa -wb -v -a <( awk '{split($1,a,/=|:|;|,/); print a[2]"\t"a[5]"\t"a[5]"\t"$1"\t0\t"a[6]}' ${id}_peptideSeqsFASTA_header_passed1 ) -b ${path}/IPA_events_from_GTEx_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed2
-        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed2 -b ${path}/IPA_events_from_tcga_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed3
-        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed3 -b ${path}/IPA_events_from_blueprint_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed4
-done
+#for file in $(cat ${files}) ; do
+#        id=$(echo "${file}" | cut -d "." -f1)
+#        bedtools intersect -wa -wb -v -a <( awk '{split($1,a,/=|:|;|,/); print a[2]"\t"a[5]"\t"a[5]"\t"$1"\t0\t"a[6]}' ${id}_peptideSeqsFASTA_header_passed1 ) -b ${path}/IPA_events_from_GTEx_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed2
+#        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed2 -b ${path}/IPA_events_from_tcga_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed3
+#        bedtools intersect -wa -wb -v -a ${id}_peptideSeqsFASTA_header_passed3 -b ${path}/IPA_events_from_blueprint_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed4
+#done
 
 ## intronic neo-epitope prediction
 for file in $(cat ${files}); do
