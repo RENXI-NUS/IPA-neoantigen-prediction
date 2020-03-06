@@ -7,13 +7,13 @@ bam_path=$4
 file_path=$5
 
 cd ${path}
-cp findPeak.cluster.pl splicing_coordinates_TCGA_12_cancers1 EncodeGencode_merged_intron_selected_excluded_exon_- EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered hg19_intron.excluded.exon.bed PASRA2PeptideSeqs.py ${file_path}
-cd ${file_path}
+cp findPeak.cluster.pl A.splicing_coordinates_TCGA_12_cancers D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered B.hg19_intron.excluded.exon.bed GeneratePeptide.py ${file_path}/${cancer}
 python=`grep py2 run.config | sed s/.*\=//`
 netMHCpan=`grep netMHCpan run.config | sed s/.*\=//`
+files="${file_path}/${cancer}.list"
+cd ${file_path}/${cancer}
 
 ## identify intronic PASs 
-files="${cancer}.list"
 for file in $(cat ${files}); do awk '$4 !~ /N/' ${file}_potential_polyA_sites_from_softclipped_reads.txt >> ${file}.0; done ##remove splicing reads
 for file in $(cat ${files}); do awk 'NR==FNR{a[$2]++; next} a[$2]>=2' <(sort -k3,3r -k1,1 -k2,2n ${file}.0) <(sort -k3,3r -k1,1 -k2,2n ${file}.0) > ${file}.0.1; done	# print the PASs that supported by at least two soft-clipping reads
 for file in $(cat ${files}); do sort -k3,3r -k1,1 -k2,2n ${file}.0.1 | awk '{if ($3 == "+") print $1"\t"$2"\t"$2+1"\t"$4"\t0\t"$3}' > ${file}.0.1.output; done
@@ -25,17 +25,17 @@ mergeBed -d 24 -s -i ${cancer}.cluster.sorted.bed -c 4,5,6 -o collapse,sum,disti
 for file in $(cat ${files}); do cat ${file}.0.1.output >> ${cancer}_all_SC_reads ; done
 perl findPeak.cluster.pl ${cancer}.cluster.merged.bed ${cancer}_all_SC_reads ${cancer}.cluster.merged_withPeak.bed
 awk -F ',' '{if (NF >= 1 ) print }' ${cancer}.cluster.merged_withPeak.bed | awk '{print "chr"$1"\t"$7"\t"$8"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed ##only keep the polyA clusters that supported by at least 2 samples. But if there is only one sample to be analyzed, then change it to one
-bedtools intersect -wa -wb -a ${cancer}.cluster.merged_withPeak.reliable.bed -b hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron
-bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron) -b <(sort -k6,6r -k1,1 -k2,2n gencode_PASs_extended_by_100_filtered ) > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1  ## filter the identified IPA with GENCODE annotation
-bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1) -b <(sort -k6,6r -k1,1 -k2,2n splicing_coordinates_TCGA_12_cancers ) > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3  ## filter out the coordinates if has at least 6 junction reads
-bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n EncodeGencode_merged_intron_selected_excluded_exon_+) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer}
-bedtools intersect -wa -wb -a <(sort -k6,6r -k1,1 -k2,2n ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered3) -b <(sort -k6,6r -k1,1 -k2,2n EncodeGencode_merged_intron_selected_excluded_exon_-) | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer}
+bedtools intersect -wa -wb -a ${cancer}.cluster.merged_withPeak.reliable.bed -b B.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron
+bedtools intersect -wa -wb -v -a  ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron -b  gencode_PASs_extended_by_100_filtered > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1  ## filter the identified IPA with GENCODE annotation
+#bedtools intersect -wa -wb -v -a  ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1 -b  A.splicing_coordinates_TCGA_12_cancers > ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered2  ## filter out the coordinates if has at least 6 junction reads
+bedtools intersect -wa -wb -a  ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1 -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer}
+bedtools intersect -wa -wb -a  ${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1 -b  D.EncodeGencode_merged_intron_selected_excluded_exon_- | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer}
 awk -F'\t' -v OFS='\t' '{ if ($6 == "+") print $1,$2,$10,$13,$14,$15,$6,$8,$5,$11}' EncodeGencode_merged_intron_selected_+_overlapped_with_${cancer} > input_for_peptideseqs_of_1_${cancer}
 awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$9,$5,$11}' EncodeGencode_merged_intron_selected_-_overlapped_with_${cancer} >> input_for_peptideseqs_of_1_${cancer}
 awk -F"\t" '!seen[$1, $2, $(NF-2)]++' input_for_peptideseqs_of_1_${cancer} > ${cancer}_input_for_peptideseqs_uniq
 
 ## generate IPA derived peptide sequences
-${python} GeneratePeptide.py "${window}" "${file_path}" ${cancer}_input_for_peptideseqs_uniq
+${python} GeneratePeptide.py "${window}" "${file_path}/${cancer}" ${cancer}_input_for_peptideseqs_uniq
 grep '>s=' peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa > peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq_header
 
 ## filter out the IPA without significant coverage drop between upstream and downstream of the IPA site
@@ -86,6 +86,8 @@ for file in $(cat ${files}); do
         fi
         ((i++))
 	(
+	sed -i 's/\X27//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
+	sed -i 's/\*//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	{ 
         read 
                 while read -a line1; do 
@@ -103,12 +105,12 @@ for file in $(cat ${files}); do
 				fi
                	        fi 
                 done  
-	} < "${file_path}/${id}/${id}-ClassI-class.HLAgenotype4digits"
+	} < "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	
-	for entry in $(cut -f4 ${id}_peptideSeqsFASTA_header_passed4) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${id}.2.fa ; done
+	for entry in $(cut -f4 ${id}_peptideSeqsFASTA_header_passed1) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${id}.2.fa ; done
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print ">s="$3"\t"$2}' | xargs -n1 > peptideSeqsFASTA_input_of_${id}
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print "s_"$3"\t"substr($1,4,length($1))}' | sed 's/\tr/\tchr/g' > key_file_of_${id}
-	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l ${window} -s -xls -xlsfile ${file_path}${id}_NETMHCpan_out.xls -a ${hla1} -BA > "${path}/logs/${id}"
+	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l ${window} -s -xls -xlsfile "${file_path}/${cancer}/${id}_NETMHCpan_out.xls" -a ${hla1} -BA > "${path}/logs/${id}"
 	awk '{print $3"\t"$0}' ${id}_NETMHCpan_out.xls > tmp_${id}
 	awk -v OFS='\t' 'NR==FNR {h[$1] = $2;next} {print h[$1],$0}' key_file_of_${id} tmp_${id} | awk '{if ($NF != 0) print}' | tail -n+3 | grep -v ',CD99,' > ${id}_output
 	
@@ -124,8 +126,8 @@ for file in $(cat ${files}); do
 	awk -F'\t' -v OFS='\t' '{split($1,a,","); print a[1],a[2],a[4]"\t"a[3]"\t"$4}' ${id}_output | awk -F"\t" '!seen[$5]++' > ${id}.reliables
 	
 ## filter with uniprot
-	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer} ${path}
-        java -jar ${path}/PeptideMatchCMD_1.0.jar -a query -i ${path}/sprot_index_human/ -Q ${file_path}${id}.reliables.fa -e -o ${id}.reliables.fa.out
+	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer} "${file_path}/${cancer}"
+        java -jar ${path}/PeptideMatchCMD_1.0.jar -a query -i ${path}/sprot_index_human/ -Q "${file_path}/${cancer}/${id}.reliables.fa" -e -o ${id}.reliables.fa.out
         for line in $(grep 'No match' ${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ ${id}.reliables >> ${id}.reliables.filtered_by_uniprot ; done
 	) &
 done
