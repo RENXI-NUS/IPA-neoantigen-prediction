@@ -11,7 +11,20 @@ dataset_name=`grep dataset_name run.config | sed s/.*\=//`
 bam_dir=`grep bam_dir run.config | sed s/.*\=//`
 output_dir=`grep output_dir run.config | sed s/.*\=//`
 
+mkdir -p "${output_dir}"
+mkdir -p "${output_dir}/${dataset_name}"
+logs="${output_dir}/logs"
+mkdir -p "$logs"
+cd ${bam_path}
+ls *"bam" > "${path}/${dataset_name}.list"
+
 cd $curr_dir
+
+## run HLA typing with Seq2HLA
 bash "$curr_dir"/run_Seq2HLA.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out 
+
+## detect soft-clipped reads for downstream IPA analysis
 bash "$curr_dir"/predict_polyA_spanning_reads.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out 
+
+## predict potential IPA neoantigens
 bash "$curr_dir"/run_neoepitope_pipeline.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out

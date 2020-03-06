@@ -8,17 +8,8 @@ cd ${current_path}
 python_script=`grep py2 run.config | sed s/.*\=//`
 seq2HLA=`grep seq2HLA_script run.config | sed s/.*\=//`
 
-mkdir -p "${path}"
-cd ${path}
-mkdir -p "${dataset_name}"
-
-cd ${bam_path}
-ls *"bam" > "${path}/${dataset_name}.list"
-
 cd "${path}/${dataset_name}"
 list="${path}/${dataset_name}.list"
-logs="${path}/logs"
-mkdir -p "$logs"
 
 for line in $(cat ${list}); do
 	id=$(echo "${line}" | cut -d "." -f1)
