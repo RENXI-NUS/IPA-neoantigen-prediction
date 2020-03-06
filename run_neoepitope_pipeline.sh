@@ -9,7 +9,7 @@ file_path=$5
 cd ${path}
 cp findPeak.cluster.pl splicing_coordinates_TCGA_12_cancers1 EncodeGencode_merged_intron_selected_excluded_exon_- EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered hg19_intron.excluded.exon.bed PASRA2PeptideSeqs.py ${file_path}
 cd ${file_path}
-python=`grep python run.config | sed s/.*\=//`
+python=`grep py2 run.config | sed s/.*\=//`
 netMHCpan=`grep netMHCpan run.config | sed s/.*\=//`
 
 ## identify intronic PASs 

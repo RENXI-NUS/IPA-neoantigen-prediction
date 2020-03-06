@@ -4,24 +4,23 @@ current_path=$1
 dataset_name=$3
 bam_path=$4
 path=$5
-echo $5
-echo $3
-cd ${path}
+cd ${current_path} 
+python_script=`grep py2 run.config | sed s/.*\=//`
+seq2HLA=`grep seq2HLA_script run.config | sed s/.*\=//`
 
+cd ${path}
 mkdir -p "${dataset_name}"
 
 cd ${bam_path}
 ls *"bam" > "${path}/${dataset_name}.list"
 
 cd "${path}/${dataset_name}"
-python_script="/data/11000039/e0149673/scratch/bin/anaconda2/envs/py2/bin/python"
-seq2HLA="/data/11000039/e0149673/scratch/bin/seq2HLA/seq2HLA.py"
 list="${path}/${dataset_name}.list"
 logs="${path}/logs"
 mkdir -p "$logs"
 
 for line in $(cat ${list}); do
-        id=$(echo "${line}" | cut -d "." -f1)
+	id=$(echo "${line}" | cut -d "." -f1)
         mkdir -p "${id}"
 #	if [ ! -f "/${id}/"*"ClassI-class.HLAgenotype4digits" ]; then
 		N=6
