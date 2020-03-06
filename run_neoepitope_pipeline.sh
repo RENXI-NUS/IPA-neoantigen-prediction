@@ -52,7 +52,7 @@ grep -v "GeneID" ${cancer}_featureCounts_downstream_window | awk 'BEGIN { OFS="\
 
 for file in $(cat ${files}); do
         id=$(echo "${file}" | cut -d "." -f1)
-	bam_file="${bam_path}/"*"bam"
+	bam_file="${bam_path}/${id}"*"bam"
         N=24
         if (( i % N == 0 )); then
                 wait
