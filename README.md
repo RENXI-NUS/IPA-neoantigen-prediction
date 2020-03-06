@@ -12,10 +12,10 @@ In order to run, please:
 2) Download twoBitToFa utility from UCSC genome browser (https://genome.ucsc.edu/goldenpath/help/twoBit.html) and change the path in GeneratePeptide.py file (line 173).
 3) Download all the four reference files from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing.
 
-    A. splicing junction coordinates derived from patients of 12 TCGA cancers. This file could be customizedly generated and substituted by processing the STAR output files ending *.sj.out.tab    
-    B. BED fromat file containing all introns from GENCODE annotation    
-    C. File of intron boundaries with frame information from positive strand    
-    D. File of intron boundaries with frame information from negative strand
+    A: Splicing junction coordinates derived from patients of 12 TCGA cancers. This file could be customizedly generated and substituted by processing the STAR output files ending *.sj.out.tab    
+    B: BED fromat file containing all introns from GENCODE annotation    
+    C: File of intron boundaries with frame information from positive strand    
+    D: File of intron boundaries with frame information from negative strand
 4) Input: 
     -  BAM files sorted by name are copyed within the same directory (output file from STAR is preferred and the name of the file changed to *.unsorted.bam)
     -  FASTQ files (for HLA typing) are copyed within the same directory (the naming of BAM file and FASTQ file should be consistent)
