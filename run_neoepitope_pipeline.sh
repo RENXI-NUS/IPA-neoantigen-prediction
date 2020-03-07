@@ -110,7 +110,7 @@ for file in $(cat ${files}); do
 	for entry in $(cut -f4 ${id}_peptideSeqsFASTA_header_passed1) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${id}.2.fa ; done
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print ">s="$3"\t"$2}' | xargs -n1 > peptideSeqsFASTA_input_of_${id}
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' peptideSeqsFASTA_with_SigDrop_${id}.2.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print "s_"$3"\t"substr($1,4,length($1))}' | sed 's/\tr/\tchr/g' > key_file_of_${id}
-	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l ${window} -s -xls -xlsfile ${id}_NETMHCpan_out.xls -a ${hla1} -BA > "${file_path}/logs/${id}"
+	"${netMHCpan}" -f peptideSeqsFASTA_input_of_${id} -inptype 0 -l "${window}" -s -xls -xlsfile "${file_path}/${cancer}/${id}_NETMHCpan_out.xls" -a ${hla1} -BA > "${file_path}/logs/${id}"
 	awk '{print $3"\t"$0}' ${id}_NETMHCpan_out.xls > tmp_${id}
 	awk -v OFS='\t' 'NR==FNR {h[$1] = $2;next} {print h[$1],$0}' key_file_of_${id} tmp_${id} | awk '{if ($NF != 0) print}' | tail -n+3 | grep -v ',CD99,' > ${id}_output
 	
