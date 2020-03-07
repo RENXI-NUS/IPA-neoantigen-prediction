@@ -9,12 +9,14 @@ list="${path}/${dataset_name}.list"
 
 for line in $(tac ${list}); do
 #	if [ ! -f "${path}/${dataset_name}/${line}_potential_polyA_sites_from_softclipped_reads.txt" ]; then
-		N=24
-        	if (( i % N == 0 )); then
-                	wait
-        	fi
-	        ((i++))
-		(perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${bam_path}/${line}" "${path}/${dataset_name}/${line}"
-                perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${bam_path}/${line}" "${path}/${dataset_name}/${line}" ) &
-		#	fi
+#		N=24
+#        	if (( i % N == 0 )); then
+#                	wait
+#        	fi
+#	        ((i++))
+#		(
+		perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${bam_path}/${line}" "${path}/${dataset_name}/${line}"
+                perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${bam_path}/${line}" "${path}/${dataset_name}/${line}" 
+#		) &
+#		fi
 done
