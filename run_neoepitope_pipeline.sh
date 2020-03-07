@@ -53,19 +53,19 @@ grep -v "GeneID" ${cancer}_featureCounts_downstream_window | awk 'BEGIN { OFS="\
 for file in $(cat ${files}); do
         id=$(echo "${file}" | cut -d "." -f1)
 	bam_file="${bam_path}/${id}"*"bam"
-        N=24
-        if (( i % N == 0 )); then
-                wait
-        fi
-        ((i++))
-	(
+#        N=24
+#        if (( i % N == 0 )); then
+#                wait
+#        fi
+#        ((i++))
+#	(
 	featureCounts -F SAF -p -s 0 -g gene_id -t exon -a ${cancer}_featureCounts_upstream_window1 -o ${id}_featureCounts_upstream_window_counts.txt ${bam_file} -T 6 -f -M -O --ignoreDup
 	featureCounts -F SAF -p -s 0 -g gene_id -t exon -a ${cancer}_featureCounts_downstream_window1 -o ${id}_featureCounts_downstream_window_counts.txt ${bam_file} -T 6 -f -M -O --ignoreDup
 	paste -d "\t" <(tail -n+3 ${id}_featureCounts_upstream_window_counts.txt | awk '{print $1}') <(tail -n+3 ${id}_featureCounts_upstream_window_counts.txt | awk '{print $NF}') <(tail -n+3 ${id}_featureCounts_downstream_window_counts.txt | awk '{print $NF}') | awk '{split($1,a,"=|:|;|,"); if (a[6] == "+" && $(NF-1)-$NF > 5 && $(NF-1) > 5 && $(NF-1)/($NF + $(NF-1)) > 1/2) print $1}' > ${id}_peptideSeqsFASTA_header_passed
 	paste -d "\t" <(tail -n+3 ${id}_featureCounts_upstream_window_counts.txt | awk '{print $1}') <(tail -n+3 ${id}_featureCounts_upstream_window_counts.txt | awk '{print $NF}') <(tail -n+3 ${id}_featureCounts_downstream_window_counts.txt | awk '{print $NF}') | awk '{split($1,a,"=|:|;|,"); if (a[6] == "-" && $NF-$(NF-1) > 5 && $NF > 5 && $NF/($(NF-1) + $NF) > 1/2) print $1}' >> ${id}_peptideSeqsFASTA_header_passed
 	awk '{split($1,a,":|;|,"); if (sqrt((a[4]-a[2])^2) > 48) print }' ${id}_peptideSeqsFASTA_header_passed > ${id}_peptideSeqsFASTA_header_passed1 ## iPASs will be deleted if the distance to intron boundary is no more than 24
 	for entry in $(cat ${id}_peptideSeqsFASTA_header_passed1) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${cancer}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${id}.fa ; done
-	) &
+#	) &
 done
 
 ## filter with matched normal samples from TCGA, GTEx and BLUEPRINT
@@ -80,12 +80,12 @@ done
 for file in $(cat ${files}); do
 	id=$(echo "${file}" | cut -d "." -f1)
 	bam_file="${bam_path}/${id}"*"bam"
-	N=24
-        if (( i % N == 0 )); then
-                wait
-        fi
-        ((i++))
-	(
+#	N=24
+#        if (( i % N == 0 )); then
+#                wait
+#        fi
+#        ((i++))
+#	(
 	sed -i 's/\X27//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	sed -i 's/\*//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	{ 
@@ -129,7 +129,7 @@ for file in $(cat ${files}); do
 	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer} "${file_path}/${cancer}"
         java -jar ${path}/PeptideMatchCMD_1.0.jar -a query -i ${path}/sprot_index_human/ -Q "${file_path}/${cancer}/${id}.reliables.fa" -e -o ${id}.reliables.fa.out
         for line in $(grep 'No match' ${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ ${id}.reliables >> ${id}.reliables.filtered_by_uniprot ; done
-	) &
+#	) &
 done
 
 #rm *.0*
