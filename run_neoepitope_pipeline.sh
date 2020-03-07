@@ -86,7 +86,7 @@ for file in $(cat ${files}); do
 #        fi
 #        ((i++))
 #	(
-	sed -i 's/\X27//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
+	sed -i 's/\x27//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	sed -i 's/\*//g' "${file_path}/${cancer}/${id}/${id}-ClassI-class.HLAgenotype4digits"
 	{ 
         read 
