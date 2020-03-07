@@ -128,7 +128,7 @@ for file in $(cat ${files}); do
 ## filter with uniprot
 	bash ${path}/construct_fasta.sh ${id}.reliables ${cancer} "${file_path}/${cancer}"
         java -jar ${path}/PeptideMatchCMD_1.0.jar -a query -i ${path}/sprot_index_human/ -Q "${file_path}/${cancer}/${id}.reliables.fa" -e -o ${id}.reliables.fa.out
-        for line in $(grep 'No match' ${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ ${id}.reliables >> ${id}.reliables.filtered_by_uniprot ; done
+        for line in $(grep 'No match' ${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ ${id}.reliables >> ${id}.reliables.filtered_by_uniprot.final.txt ; done
 #	) &
 done
 
