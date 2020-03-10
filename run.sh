@@ -1,8 +1,4 @@
 #!/bin/bash
-#PBS -N test_pipeline
-#PBS -l walltime=24:00:00
-#PBS -P 11000039 
-#PBS -l select=1:ncpus=24
 
 cd /data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/scripts/test/IPA-neoantigen-prediction
 curr_dir=`grep curr_dir run.config | sed s/.*\=//`
