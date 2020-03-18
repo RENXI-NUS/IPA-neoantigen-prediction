@@ -68,7 +68,7 @@ for file in $(cat ${files}); do
 #	) &
 done
 
-## filter with matched normal samples from TCGA, GTEx and BLUEPRINT
+## you can filter with normal samples from TCGA, GTEx and BLUEPRINT if necessary
 #for file in $(cat ${files}) ; do
 #        id=$(echo "${file}" | cut -d "." -f1)
 #        bedtools intersect -wa -wb -v -a <( awk '{split($1,a,/=|:|;|,/); print a[2]"\t"a[5]"\t"a[5]"\t"$1"\t0\t"a[6]}' ${id}_peptideSeqsFASTA_header_passed1 ) -b ${path}/IPA_events_from_GTEx_normal_for_filtering > ${id}_peptideSeqsFASTA_header_passed2
@@ -133,3 +133,4 @@ for file in $(cat ${files}); do
 done
 
 rm *.0*
+# rm findPeak.cluster.pl A.splicing_coordinates_TCGA_12_cancers D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered B.hg19_intron.excluded.exon.bed GeneratePeptide.py peptideSeqsFASTA_* key_file_of_* tmp_* *output* "${cancer}"* *xls *featureCount* *reliables *reliables.fa* *passed* EncodeGencode_merged_intron_selected_* *reads.txt headermap_* input_for_peptideseqs_of_1_*
