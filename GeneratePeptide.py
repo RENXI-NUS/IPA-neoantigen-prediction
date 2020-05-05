@@ -206,18 +206,8 @@ def main():
         print('Error: incorrect number of inputs.')
         print('Please input the AA window you want, an outfile path, and a polyA site file.')
         sys.exit()
-    # Store inputs
-#        kmafile = sys.argv[1]
     window = int(sys.argv[1])
     outpath = sys.argv[2]
-#    uniqueIntrons = open("/data2/renxi/bin/retained-intron-neoantigen-pipeline/text.txt", "r")
-    #_, indices = np.unique(chromlocs, return_index=True)
-    #uniquelocs = chromlocs[indices,:]
-#        uniqueIntrons = np.core.defchararray.strip(uniquelocs, '"')  # Strip "s from locations
-        # Create unique intron output file
-        #uniqueIntrons,TPMvals = createUniqueIntronList(kmafile, outpath)
-#        window = '9'
-        # Create nucleotide sequences file
     getSeqs(window, outpath)
 
 if __name__ == '__main__':
