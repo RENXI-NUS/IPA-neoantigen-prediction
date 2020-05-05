@@ -2,7 +2,6 @@ import sys
 import numpy as np
 import subprocess
 from Bio.Seq import Seq
-import bisect
         
 def manualTranslate(fastasequence):
     # Initialize codon table and list of peptides
