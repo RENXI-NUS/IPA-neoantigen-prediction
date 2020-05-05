@@ -3,19 +3,6 @@ import numpy as np
 import subprocess
 from Bio.Seq import Seq
 import bisect
-
-def createUniqueIntronList(csvfile, outpath):
-    # Read in chromosome locations and TPM values (columns 1 and 4) from KMA output file
-    chromlocs = np.loadtxt(csvfile, dtype=str, delimiter=',', skiprows=1, usecols=[1,3])
-    # Only extract unique chromosomal locations
-    _, indices = np.unique(chromlocs[:,0], return_index=True)
-    uniquelocs = chromlocs[indices,:]
-    uniquelocs = np.core.defchararray.strip(uniquelocs, '"')  # Strip "s from locations
-    # Write contents of uniquelocs array to file (for reference later)
-    filepath = outpath+'/'+'uniqueIntronList.txt'
-    np.savetxt(filepath, uniquelocs, fmt='%s', delimiter='\t')
-    # Return unique list of intron locations and corresponding TPM values
-    return list(uniquelocs[:,0]),list(uniquelocs[:,1])
         
 def manualTranslate(fastasequence):
     # Initialize codon table and list of peptides
