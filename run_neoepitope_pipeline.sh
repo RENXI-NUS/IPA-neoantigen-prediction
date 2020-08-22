@@ -1,8 +1,5 @@
 #!/bin/bash
 #PBS -N BLCA
-#PBS -l walltime=23:59:59
-#PBS -l select=1:ncpus=23
-#PBS -P 11000039
 
 :<<USE
 1, call cluster 
