@@ -17,7 +17,7 @@ In order to run, please:
     C: File of intron boundaries with frame information from positive strand    
     D: File of intron boundaries with frame information from negative strand
 4) Download reference files "_c_Lucene41_0.pos" and "_c_Lucene41_0.doc" from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing, and put them into the IPA-neoantigen-prediction/sprot_index_human folder
-5) Configure the run.config file according to the instruction of each input.
+5) Configure the run.configure file according to the instruction of each input.
 6) Input files: 
     -  BAM files (sorted by name) should be copyed to the BAM file directory (output file from STAR is preferred and the suffix of the file should change to *.unsorted.bam)
     -  Raw FASTQ files are copyed within the same directory (the naming of BAM file and corresponding FASTQ file should be consistent)
