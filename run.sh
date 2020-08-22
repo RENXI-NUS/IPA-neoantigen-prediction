@@ -22,5 +22,5 @@ bash "$curr_dir"/run_Seq2HLA.sh "$curr_dir" "$peptide_length" "$dataset_name" "$
 ## detect soft-clipped reads for downstream IPA analysis
 bash "$curr_dir"/predict_polyA_spanning_reads.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out 
 
-## predict potential IPA neoantigens
-bash "$curr_dir"/run_neoepitope_pipeline.sh "$curr_dir" "$peptide_length" "$dataset_name" "$bam_dir" "$output_dir" > log.out
+## predict potential IPA neoantigens (configure the run.configure file firstly)
+bash "$curr_dir"/run_neoepitope_pipeline.sh > log.out
