@@ -19,7 +19,7 @@ mkdir $OUTDIR
 cd $installDIR
 cp findPeak.cluster.pl C.EncodeGencode_merged_intron_selected_excluded_exon_- B.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
 
-files="${installDIR}/TCGA_${cancer}.list"
+files="${installDIR}/sample_lists/TCGA_${cancer}.list"
 generate_table="${installDIR}/generate_ipa_table.R"
 rscript=`grep rscript run.configure | sed s/.*\=//`
 python=`grep py2 run.configure | sed s/.*\=//`
