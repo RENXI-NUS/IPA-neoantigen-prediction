@@ -25,7 +25,7 @@ netMHCpan=/data/11000039/e0149673/scratch/bin/software/netMHCpan-4.0/netMHCpan
 ##provide the full path of seq2HLA.py file
 seq2HLA_script=/data/11000039/e0149673/scratch/bin/seq2HLA/seq2HLA.py
 
-##provide the script of R
+##provide the full path of R
 rscript=/app/R/3.3.1/bin/Rscript
 
 ##software to count the reads from RNA-seq
