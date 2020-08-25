@@ -142,10 +142,10 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
 	$rscript $generate_table $OUTDIR ${file} ${read_length}
 
 ## filter with the putative IPA transcripts found from TCGA normal, GTEx, BLUEPRINT normal samples, and GENCODE
-	bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n $OUTDIR/${file}.ipa.table) -b <(sort -k6,6r -k1,1 -k2,2n gencode_PASs_extended_by_100_filtered ) > $OUTDIR/${file}.ipa.filtered1.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered1.table -b $installDIR/IPA_events_from_GTEx_normal_for_filtering_more_than_fifty_final > $OUTDIR/${file}.ipa.filtered2.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered2.table -b $installDIR/IPA_events_from_tcga_normal_for_filtering_more_than_four_final > $OUTDIR/${file}.ipa.filtered3.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering_more_than_four_final > $OUTDIR/${file}.ipa.filtered.table
+	bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n $OUTDIR/${file}.ipa.table) -b <(sort -k6,6r -k1,1 -k2,2n gencode_PASs ) > $OUTDIR/${file}.ipa.filtered1.table
+	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered1.table -b $installDIR/IPA_events_from_GTEx_normal_for_filtering > $OUTDIR/${file}.ipa.filtered2.table
+	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered2.table -b $installDIR/IPA_events_from_tcga_normal_for_filtering > $OUTDIR/${file}.ipa.filtered3.table
+	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
 
 ## generate IPA derived peptide sequences
 	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  B.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
