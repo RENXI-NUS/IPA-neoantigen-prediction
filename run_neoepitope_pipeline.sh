@@ -142,7 +142,7 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
 	$rscript $generate_table $OUTDIR ${file} ${read_length}
 
 ## filter with the putative IPA transcripts found from TCGA normal, GTEx, BLUEPRINT normal samples, and GENCODE
-	bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n $OUTDIR/${file}.ipa.table) -b <(sort -k6,6r -k1,1 -k2,2n gencode_PASs ) > $OUTDIR/${file}.ipa.filtered1.table
+	bedtools intersect -wa -wb -v -a <(sort -k6,6r -k1,1 -k2,2n $OUTDIR/${file}.ipa.table) -b <(sort -k6,6r -k1,1 -k2,2n $installDIR/gencode_PASs_extended_by_100_filtered ) > $OUTDIR/${file}.ipa.filtered1.table
 	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered1.table -b $installDIR/IPA_events_from_GTEx_normal_for_filtering > $OUTDIR/${file}.ipa.filtered2.table
 	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered2.table -b $installDIR/IPA_events_from_tcga_normal_for_filtering > $OUTDIR/${file}.ipa.filtered3.table
 	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
