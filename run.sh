@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/scripts/test/IPA-neoantigen-prediction
+
 installDIR=`grep installDIR run.configure | sed s/.*\=//`
 peptide_length=`grep peptide_length run.configure | sed s/.*\=//`
 dataset_name=`grep dataset_name run.configure | sed s/.*\=//`
