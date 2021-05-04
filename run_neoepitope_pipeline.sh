@@ -107,7 +107,6 @@ for file in $(cat ${files}); do
 	for line in $(cat ${file}.intron.clusterID); do grep "${line}" $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed | awk -v var=${line} '{split(var,a,/\|/); if ($6 == "+") print $1"\t"a[4]"\t"a[4]+1"\t"var"\t"a[5]"\t"$6;else print $1"\t"a[4]-1"\t"a[4]"\t"var"\t"a[5]"\t"$6}' >> $OUTDIR/${file}.intron.clusterID.output ;done
 	grep -v "${file}" $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed | awk '{if ($6 == "+") print $1"\t"$2"\t"$3"\t"$1"|"$6"|NA|"$2"|"0"\t"0"\t"$6;else print $1"\t"$2"\t"$3"\t"$1"|"$6"|NA|"$3"|"0"\t"0"\t"$6}' >> $OUTDIR/${file}.intron.clusterID.output
 
-
 ## extract polyA flanking up- and down-stream 48nt
 	awk '{if ($6 == "+") print $1"\t"$2-24"\t"$2+24"\t"$4"\t"$5"\t"$6;else print $1"\t"$3-24"\t"$3+24"\t"$4"\t"$5"\t"$6}' $OUTDIR/${file}.intron.clusterID.output > $OUTDIR/${file}.softclip.polya.win48
 
