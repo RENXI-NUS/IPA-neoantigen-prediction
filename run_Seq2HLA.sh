@@ -5,8 +5,8 @@ dataset_name=$3
 bam_path=$4
 path=$5
 cd ${current_path} 
-python_script=`grep py2 run.config | sed s/.*\=//`
-seq2HLA=`grep seq2HLA_script run.config | sed s/.*\=//`
+python_script=`grep py2 run.configure | sed s/.*\=//`
+seq2HLA=`grep seq2HLA_script run.configure | sed s/.*\=//`
 
 cd "${path}/${dataset_name}"
 list="${path}/${dataset_name}.list"
