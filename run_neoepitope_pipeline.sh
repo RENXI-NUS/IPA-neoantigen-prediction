@@ -17,7 +17,7 @@ soft_clip_path=`grep soft_clip_path run.configure | sed s/.*\=//`
 
 mkdir $OUTDIR
 cd $installDIR
-cp findPeak.cluster.pl C.EncodeGencode_merged_intron_selected_excluded_exon_- B.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
+cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
 
 files="${installDIR}/sample_lists/TCGA_${cancer}.list"
 generate_table="${installDIR}/generate_ipa_table.R"
@@ -58,7 +58,10 @@ perl findPeak.cluster.pl $OUTDIR/${cancer}.cluster.merged.bed $OUTDIR/${cancer}_
 awk -F ',' '{if (NF >= 2 ) print }' $OUTDIR/${cancer}.cluster.merged_withPeak.bed | awk '{print "chr"$1"\t"$7"\t"$8"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed ##only keep the polyA clusters that supported by at least 2 samples for analyzing one cancer. But if there is only very few samples to be analyzed, then change it to one.
 
 ## extract only intron
-bedtools intersect -wa -wb -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed -b A.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
+bedtools intersect -wa -wb -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed -b B.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
+#bedtools intersect -wa -wb -v -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed -b  gencode_PASs_extended_by_100_filtered > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1  ## filter the identified IPA with GENCODE annotation
+#bedtools intersect -wa -wb -v -a  $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1 -b  A.splicing_coordinates_TCGA_12_cancers > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered2  ## filter out the coordinates if has at least 6 junction reads
+#mv $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered2  $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
 
 ## HLA types
 for file in $(cat ${files}); do
@@ -147,8 +150,8 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
 	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
 
 ## generate IPA derived peptide sequences
-	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  B.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
-	bedtools intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  C.EncodeGencode_merged_intron_selected_excluded_exon_- | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
+	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
+	bedtools intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  D.EncodeGencode_merged_intron_selected_excluded_exon_- | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "+") print $1,$2,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_+_overlapped_with_${file} > input_for_peptideseqs_of_1_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_-_overlapped_with_${file} >> input_for_peptideseqs_of_1_${file}
 	awk -F"\t" '!seen[$1, $2, $(NF-2), $(NF-1), $NF]++' input_for_peptideseqs_of_1_${file} > ${file}_input_for_peptideseqs_uniq
