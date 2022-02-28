@@ -8,7 +8,7 @@ peptide_length=9
 dataset_name=BLCA
 
 ##full path for the bam files and raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
-bam_dir=/data/11000039/csioan/labShare/TCGA/RNA/STAR_aligned
+fastq_bam_dir=/data/11000039/csioan/labShare/TCGA/RNA/STAR_aligned
 
 ##outputfile path (STRING without space):
 output_dir="/data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/IPA_prediction_pipeline/IPA-neoantigen-prediction/${dataset_name}_IPA_prediction"
