@@ -11,7 +11,7 @@ dataset_name=BLCA
 bam_dir=/data/11000039/csioan/labShare/TCGA/RNA/STAR_aligned
 
 ##outputfile path (STRING without space):
-output_dir="/data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/IPA_prediction_pipeline/IPA-neoantigen-prediction/${dataset_name}_prediction_loose_criteria"
+output_dir="/data/11000039/e0149673/scratch/Projects/TCGA_unsorted_bam/IPA_prediction_pipeline/IPA-neoantigen-prediction/${dataset_name}_IPA_prediction"
 
 ##provide the full path of python 2 
 py2=/data/11000039/e0149673/scratch/bin/anaconda2/envs/py2/bin/python
