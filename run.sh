@@ -19,4 +19,3 @@ mkdir -p "$logs"
 
 ## predict potential IPA neoantigens (configure the run.configure file firstly)
 ./run_neoepitope_pipeline.sh
-#./test.sh
