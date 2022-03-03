@@ -8,7 +8,7 @@ peptide_length=9
 dataset_name=9_pairs_of_HCC
 
 ##provide the list of file names
-fileList=/media/ext4/renxi/projects/PLC_data_backup/9pairs_HCC_RNA/list
+fileList=/media/ext4/renxi/projects/PLC_data_backup/9pairs_HCC_RNA/TCGA_BLCA.list
 
 ##full path for the bam files and raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
 fastq_bam_dir=/media/ext4/renxi/projects/PLC_data_backup/9pairs_HCC_RNA
