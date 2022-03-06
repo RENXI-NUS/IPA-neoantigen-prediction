@@ -189,5 +189,12 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
         java -jar $installDIR/PeptideMatchCMD_1.0.jar -a query -i $installDIR/sprot_index_human/ -Q $OUTDIR/${id}.reliables.fa -e -o $OUTDIR/${id}.reliables.fa.out
 
         for line in $(grep 'No match' $OUTDIR/${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ $OUTDIR/${id}.reliables >> $OUTDIR/${id}.reliables.filtered_by_uniprot ; done
+	
+	line_num=$(cat "${id}".reliables.fa.out|wc -l)
+        if [ "${line_num}" -lt "3" ]; then
+                echo ${id} has no IPA neoantigens!
+        else
+                echo ${id} IPA neoantigen prediction finished.
+        fi
 #        ) &
 done
