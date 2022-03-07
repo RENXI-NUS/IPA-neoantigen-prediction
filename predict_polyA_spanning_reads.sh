@@ -17,11 +17,8 @@ for line in $(tac ${list}); do
 #        	fi
 #	        ((i++))
 #		(
-                file1=$(find "$bam_path" -type f -name "${line}*R1_*fastq.gz")
-                file2=$(find "$bam_path" -type f -name "${line}*R2_*fastq.gz")
-
-#		file1=$(find "$bam_path" -type f -name "${line}*1.fastq.gz")
-#		file2=$(find "$bam_path" -type f -name "${line}*2.fastq.gz")
+		file1=$(find "$fastq_bam_path" -type f -name "${line}*_1*f*q.gz")
+                file2=$(find "$fastq_bam_path" -type f -name "${line}*_2*f*q.gz")
 		"$STAR" --genomeDir "$STAR_library" --runThreadN 24 --limitBAMsortRAM 100000000000 --limitIObufferSize 1000000000 1000000000 --readFilesIn "$file1" "$file2" --outSAMtype BAM Unsorted --outFileNamePrefix "$bam_path/$line" --readFilesCommand zcat
 		perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${bam_path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}"
                 perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${bam_path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}" 
