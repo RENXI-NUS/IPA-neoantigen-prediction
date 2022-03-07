@@ -17,7 +17,7 @@ RefFile=`grep RefFile run.configure | sed s/.*\=//`
 
 mkdir $OUTDIR
 cd $installDIR
-cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
+cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_-.txt C.EncodeGencode_merged_intron_selected_excluded_exon_+.txt callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
 
 list=`grep fileList run.configure | sed s/.*\=//`
 generate_table="${installDIR}/generate_ipa_table.R"
@@ -153,8 +153,8 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
 	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
 
 ## generate IPA derived peptide sequences
-	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
-	bedtools intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  D.EncodeGencode_merged_intron_selected_excluded_exon_- | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
+	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+.txt | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
+	bedtools intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  D.EncodeGencode_merged_intron_selected_excluded_exon_-.txt | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "+") print $1,$2,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_+_overlapped_with_${file} > input_for_peptideseqs_of_1_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_-_overlapped_with_${file} >> input_for_peptideseqs_of_1_${file}
 	awk -F"\t" '!seen[$1, $2, $(NF-2), $(NF-1), $NF]++' input_for_peptideseqs_of_1_${file} > ${file}_input_for_peptideseqs_uniq
