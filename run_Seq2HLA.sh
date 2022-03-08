@@ -8,6 +8,7 @@ python_script=`grep python2 run.configure | sed s/.*\=//`
 seq2HLA=`grep seq2HLA_script run.configure | sed s/.*\=//`
 list=`grep fileList run.configure | sed s/.*\=//`
 cd "${path}/${dataset_name}"
+rename s/fq.gz/fastq.gz/ *
 for line in $(cat ${list}); do
         mkdir -p "${line}"
 #	if [ ! -f "/${id}/"*"ClassI-class.HLAgenotype4digits" ]; then
@@ -17,8 +18,8 @@ for line in $(cat ${list}); do
 #               fi
 #               ((i++))
 #		(
-		file1=$(find "$fastq_bam_path" -type f -name "${line}*_1*f*q.gz")
-                file2=$(find "$fastq_bam_path" -type f -name "${line}*_2*f*q.gz")
+		file1=$(find "$fastq_bam_path" -type f -name "${line}*_1*fastq.gz")
+                file2=$(find "$fastq_bam_path" -type f -name "${line}*_2*fastq.gz")
 		"$python_script" "$seq2HLA" -1 "${file1}" -2 "${file2}" -r "${path}/${dataset_name}/$line/$line" -p 12 -3 3
 #		) &
 #	fi
