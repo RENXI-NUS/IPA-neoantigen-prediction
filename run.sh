@@ -5,6 +5,8 @@ peptide_length=`grep peptide_length run.configure | sed s/.*\=//`
 dataset_name=`grep dataset_name run.configure | sed s/.*\=//`
 fastq_bam_dir=`grep fastq_bam_dir run.configure | sed s/.*\=//`
 output_dir=`grep output_dir run.configure | sed s/.*\=//`
+list=`grep fileList run.configure | sed s/.*\=//`
+
 cd ${installDIR}
 mkdir -p "${output_dir}"
 mkdir -p "${output_dir}/${dataset_name}"
