@@ -19,3 +19,15 @@ mkdir -p "$logs"
 
 ## predict potential IPA neoantigens (configure the run.configure file firstly)
 ./run_neoepitope_pipeline.sh >> "$logs/log.txt" 2>&1
+
+cd "${output_dir}"
+for file in $(cat ${list}); do
+        id=$(echo "${file}" | cut -d "." -f1)
+        line_num=$(cat "${id}".reliables.fa.out|wc -l)
+        if [ "${line_num}" -lt "3" ]; then
+                echo ${id} has no IPA neoantigens!
+        else
+                echo ${id} IPA neoantigen prediction finished.
+        fi
+done
+echo Pipeline has finished!
