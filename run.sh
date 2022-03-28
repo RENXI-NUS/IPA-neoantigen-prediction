@@ -15,9 +15,11 @@ mkdir -p "$logs"
 
 ## run HLA typing with Seq2HLA
 ./run_Seq2HLA.sh "${installDIR}" "${peptide_length}" "${dataset_name}" "${fastq_bam_dir}" "${output_dir}" >> "$logs/log.txt" 2>&1
+echo HLA typing has finished!
 
 ## detect soft-clipped reads for downstream IPA analysis
 ./predict_polyA_spanning_reads.sh "$installDIR" "$peptide_length" "$dataset_name" "$fastq_bam_dir" "$output_dir" >> "$logs/log.txt" 2>&1
+echo Identification of soft-clipped reads has finished!
 
 ## predict potential IPA neoantigens (configure the run.configure file firstly)
 ./run_neoepitope_pipeline.sh >> "$logs/log.txt" 2>&1
@@ -32,4 +34,4 @@ for file in $(cat ${list}); do
                 echo ${id} IPA neoantigen prediction finished.
         fi
 done
-echo Pipeline has finished!
+echo IPA neoantigen prediction has finished!
