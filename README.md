@@ -20,6 +20,7 @@ In order to run, please:
 5) Configure the run.configure file according to the instruction of each input.
 6) Ensure all the scripts are executable (chmod +x *) and start the pipeline with run.sh file.
 
+
 System Requirements:
 
 1) OS Requirements:
