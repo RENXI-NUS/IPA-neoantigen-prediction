@@ -5,6 +5,7 @@ Synopsis:
 This pipeline can predict the IPA-derived neoantigens based on large-scale RNA-seq datasets.
 
 
+
 Usage:
 
 In order to run, please:
@@ -19,6 +20,7 @@ In order to run, please:
 4) Download reference files "_c_Lucene41_0.pos" and "_c_Lucene41_0.doc" from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing, and put them into the IPA-neoantigen-prediction/sprot_index_human folder
 5) Configure the run.configure file according to the instruction of each input.
 6) Ensure all the scripts are executable (chmod +x *) and start the pipeline with run.sh file.
+
 
 
 System Requirements:
