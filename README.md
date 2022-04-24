@@ -19,3 +19,23 @@ In order to run, please:
 4) Download reference files "_c_Lucene41_0.pos" and "_c_Lucene41_0.doc" from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing, and put them into the IPA-neoantigen-prediction/sprot_index_human folder
 5) Configure the run.configure file according to the instruction of each input.
 6) Ensure all the scripts are executable (chmod +x *) and start the pipeline with run.sh file.
+
+System Requirements:
+
+1) OS Requirements:
+    Linux Ubuntu 16.04
+2) Python (tested on v2.7.17) dependencies (install the latest versions available):
+    numpy
+    subprocess
+    Bio.Seq
+3) R (tested on v4.1.2) dependencies (install the latest versions available): 
+    dplyr
+    caroline
+4) Perl (tested on v5.26.2)
+5) Software tested version:
+    STAR v2.7.10a
+    NetMHCpan v4.0
+    Seq2HLA v2.2
+    bedtools v2.25.0
+    samtools v0.1.19
+    featureCounts v2.0.1
