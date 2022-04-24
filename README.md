@@ -33,9 +33,15 @@ System Requirements:
     caroline
 4) Perl (tested on v5.26.2)
 5) Software tested version:
+
     STAR v2.7.10a
+    
     NetMHCpan v4.0
+    
     Seq2HLA v2.2
+    
     bedtools v2.25.0
+    
     samtools v0.1.19
+    
     featureCounts v2.0.1
