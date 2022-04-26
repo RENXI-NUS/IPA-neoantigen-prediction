@@ -43,7 +43,7 @@ In order to run, please:
     
     Seq2HLA v2.2
     
-    bedtools v2.25.0
+    bedtools v2.23.0
     
     samtools v0.1.19
     
