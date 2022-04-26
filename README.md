@@ -35,7 +35,7 @@ In order to run, please:
     dplyr
     caroline
 4) Perl (tested on v5.26.2)
-5) Software tested version (install tested version: conda install -c bioconda bedtools=2.23.0):
+5) Software tested version (install tested version: _**conda install -c bioconda bedtools=2.23.0**_):
 
     bedtools v2.23.0
     
