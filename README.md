@@ -1,12 +1,12 @@
 # Intronic polyadenylated (IPA) neoantigen prediction
 
-Synopsis:
+**Synopsis:**
 
 This pipeline can predict the IPA-derived neoantigens based on large-scale RNA-seq datasets.
 
 
 
-Usage:
+**Usage:**
 
 In order to run, please:
 1) Download and install bedtools (https://bedtools.readthedocs.io/en/latest/content/installation.html), featureCounts (http://subread.sourceforge.net/), NetMHCPan-4.0 (http://www.cbs.dtu.dk/services/NetMHCpan/) and Seq2HLA (https://github.com/TRON-Bioinformatics/seq2HLA).
@@ -23,7 +23,7 @@ In order to run, please:
 
 
 
-System Requirements:
+**System Requirements:**
 
 1) OS Requirements:
     Linux Ubuntu 16.04
