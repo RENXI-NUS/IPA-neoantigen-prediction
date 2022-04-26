@@ -33,7 +33,6 @@ In order to run, please:
     Bio.Seq
 3) R (tested on v4.1.2) dependencies (install the latest versions available): 
     dplyr
-    caroline
 4) Perl (tested on v5.26.2)
 5) Software tested version (install tested version: _**conda install -c bioconda bedtools=2.23.0**_):
 
