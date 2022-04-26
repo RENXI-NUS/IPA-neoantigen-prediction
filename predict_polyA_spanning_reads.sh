@@ -1,7 +1,7 @@
 #!/bin/bash
 current_path=$1
 dataset_name=$3
-bam_path=$4
+fastq_bam_path=$4
 path=$5
 STAR=`grep Star_tool run.configure | sed s/.*\=//`
 STAR_library=`grep Star_Lib run.configure | sed s/.*\=//`
