@@ -11,13 +11,13 @@ num_of_samples_supporting=1
 dataset_name=Testing
 
 ##provide the list of file names
-fileList=/media/ext4/liming/projects/list
+fileList=/media/ext4/liming/bin/software/IPA-neoantigen-prediction/example/list
 
 ##full path for the bam files and raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
-fastq_bam_dir=/media/ext4/liming/projects
+fastq_bam_dir=/media/ext4/liming/bin/software/IPA-neoantigen-prediction/example
 
 ##outputfile path (STRING without space):
-output_dir=/media/ext4/liming/projects/test_IPA_pipeline5
+output_dir=/media/ext4/liming/projects/test_IPA_pipeline
 
 ##provide the full path to the reference genome file (Preferentially mapping hg19 genome)
 RefFile=/media/ext4/liming/bin/library/hg19.fa
