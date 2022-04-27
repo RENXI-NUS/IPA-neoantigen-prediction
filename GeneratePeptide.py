@@ -27,7 +27,7 @@ def manualTranslate(fastasequence):
         fulllengthprotein += AA
     return fulllengthprotein
 
-def getSeqs(nAAs, outpath):
+def getSeqs(nAAs, outpath, twoBitToFa):
     outfile = open(outpath + '/peptideSeqsFASTA_' + sys.argv[3] + '.fa','a')
     headermapfile = open(outpath + '/headermap_' + sys.argv[3],'a')
     uniqueIntrons = open(sys.argv[3], 'r')
@@ -168,15 +168,13 @@ def getSeqs(nAAs, outpath):
         else:
             loc = chrom + ':' + str(wholeseqstart - 1) + '-' + str(wholeseqend)
         loc = '-seq='+loc
-                #print loc
-        twobitoutput = (subprocess.check_output(['twoBitToFa',loc,'hg19.2bit','stdout']))
-                # Parse output
+        twobitoutput = (subprocess.check_output([twoBitToFa,loc,'hg19.2bit','stdout']))
+        # Parse output
         seqlist = twobitoutput.split('\n')
         headerline = seqlist[0]+"|"+tpmval
         seqlist = seqlist[1:len(seqlist)-1]
         sequence = ''.join(str(elem) for elem in seqlist)
         sequence = sequence.upper()
-        #print sequence
         # Reverse complement if it's on the negative strand
         if strand == ('-'):
             sequence = str(Seq(sequence).reverse_complement())
@@ -201,13 +199,14 @@ def getSeqs(nAAs, outpath):
 # Main function that processes command line input and calls other functions
 def main():
     # Check to make sure we have the right number of inputs
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print('Error: incorrect number of inputs.')
-        print('Please input the AA window you want, an outfile path, and a polyA site file.')
+        print('Please input the AA window you want, an outfile path, a polyA site file, and installation path to twoBitToFa.')
         sys.exit()
     window = int(sys.argv[1])
     outpath = sys.argv[2]
-    getSeqs(window, outpath)
+    twoBitToFa = sys.argv[4]
+    getSeqs(window, outpath, twoBitToFa)
 
 if __name__ == '__main__':
     main()

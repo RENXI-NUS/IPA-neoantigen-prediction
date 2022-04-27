@@ -4,38 +4,50 @@ installDIR=/media/ext4/liming/bin/software/IPA-neoantigen-prediction
 ##provide peptide length (The length of peptide to be used for binding affinity prediction, and must be from 8 to 14 amino acids)
 peptide_length=9
 
-##dataset name (the dataset name of this prediction):
-dataset_name=9_pairs_of_HCC
+##specify the number of samples supporting the polyA sites (only keep the polyA clusters that supported by at least 2 samples for analyzing one cancer. If there are only less than 5 samples to be analyzed, change it to one)
+num_of_samples_supporting=1
 
-##provide the list of file names (the names in the list should be the full names of the analyzed fastq files)
-fileList=/media/ext4/renxi/projects/PLC_data_backup/9pairs_HCC_RNA/TCGA_BLCA.list
+##dataset name (the dataset name of this prediction):
+dataset_name=Testing
+
+##provide the list of file names
+fileList=/media/ext4/liming/projects/list
 
 ##full path for the bam files and raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
-fastq_bam_dir=/media/ext4/renxi/projects/PLC_data_backup/9pairs_HCC_RNA
+fastq_bam_dir=/media/ext4/liming/projects
 
 ##outputfile path (STRING without space):
-output_dir=/media/ext4/liming/projects/test_IPA_pipeline
+output_dir=/media/ext4/liming/projects/test_IPA_pipeline5
 
-##provide the full path to the reference genome file
+##provide the full path to the reference genome file (Preferentially mapping hg19 genome)
 RefFile=/media/ext4/liming/bin/library/hg19.fa
 
 ##provide the full path of STAR tool (tested version: STAR 2.7.10a)
 Star_tool=/media/ext4/liming/bin/anaconda3/envs/py2/bin/STAR
 
 ##full path for the STAR library 
-Star_Lib=/media/ext5/renxi/bin/library/STAR_hg19/100
+Star_Lib=/media/ext5/renxi/bin/library/STAR_hg19/48
 
 ##provide the full path of python 2 
 python2=/media/ext4/liming/bin/anaconda3/envs/py2/bin/python
 
-##provide the full path of runNetMHCpan.py file
+##provide the full path of runNetMHCpan file
 netMHCpan=/media/ext4/liming/bin/software/netMHCpan-4.0/netMHCpan
 
 ##provide the full path of seq2HLA.py file
 seq2HLA_script=/media/ext4/liming/bin/software/seq2HLA/seq2HLA.py
 
-##provide the full path of R (please install dplyr and caroline packages before running the pipeline, tested R version: 4.1.2)
+##provide the full path of R (please install dplyr and caroline packages before running the pipeline)
 rscript=/usr/bin/Rscript
 
 ##software to count the reads from RNA-seq
 featureCounts=/media/ext4/liming/bin/anaconda3/envs/py2/bin/featureCounts
+
+##provide full path of faTotwoBit
+faToTwoBit=/media/ext4/liming/bin/anaconda3/bin/faToTwoBit
+
+##provide full path of twoBittoFa
+twoBitToFa=/media/ext4/liming/bin/anaconda3/bin/twoBitToFa
+
+##provide full path for bedtools (tested with v2.23.0, install: conda install -c bioconda bedtools=2.23.0)
+Bedtools=/media/ext4/liming/bin/anaconda3/bin/bedtools

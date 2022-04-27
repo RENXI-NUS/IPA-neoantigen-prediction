@@ -4,7 +4,7 @@
 :<<USE
 1, call cluster 
 2, calculate IPA coverage 
-3, predict IPA fasta files 
+3, generate IPA Fasta files 
 4. predict IPA neoantigens
 USE
 
@@ -17,28 +17,32 @@ RefFile=`grep RefFile run.configure | sed s/.*\=//`
 
 mkdir $OUTDIR
 cd $installDIR
-cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_-.txt C.EncodeGencode_merged_intron_selected_excluded_exon_+.txt callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
+cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
 
 list=`grep fileList run.configure | sed s/.*\=//`
 generate_table="${installDIR}/generate_ipa_table.R"
 rscript=`grep rscript run.configure | sed s/.*\=//`
 python=`grep python2 run.configure | sed s/.*\=//`
+bedtools=`grep Bedtools run.configure | sed s/.*\=//`
 netMHCpan=`grep netMHCpan run.configure | sed s/.*\=//`
 featureCounts=`grep featureCounts run.configure | sed s/.*\=//`
+faToTwoBit=`grep faToTwoBit run.configure | sed s/.*\=//`
+twoBitToFa=`grep twoBitToFa run.configure | sed s/.*\=//`
+num_of_sample_supporting=`grep num_of_samples_supporting run.configure | sed s/.*\=//`
 
 cd $OUTDIR
 mkdir "$OUTDIR/logs"
 
 for file in $(cat ${list}); do
 
-	BAM="${bam_path}/${file}"*".bam"
-	JUNCBED="${bam_path}/${file}"*"SJ.out.tab"
+	BAM="${OUTDIR}/${file}"*".bam"
+	JUNCBED="${OUTDIR}/${file}"*"SJ.out.tab"
 	soft_clip_file="${OUTDIR}/${cancer}/${file}_potential_polyA_sites_from_softclipped_reads.txt"
-	STAR_final_output="${bam_path}/${file}"*"Log.final.out"
+	STAR_final_output="${OUTDIR}/${file}"*"Log.final.out"
 	read_length=$(grep "Average input read length" $STAR_final_output | awk '{print $NF}')
 
 ### call cluster 
-	echo call cluster for all soft clipped reads
+	echo "`date '+%F %T'` Call cluster based on extracted soft clipped reads!"
 	awk '$4 !~ /N/' ${soft_clip_file} >> $OUTDIR/${file}.0 ##remove splicing reads
 	awk 'NR==FNR{a[$2]++; next} a[$2]>=2' <(sort -k3,3r -k1,1 -k2,2n $OUTDIR/${file}.0) <(sort -k3,3r -k1,1 -k2,2n $OUTDIR/${file}.0) > $OUTDIR/${file}.0.1  # print the PASs that supported by at least two soft-clipping reads
 	sort -k3,3r -k1,1 -k2,2n $OUTDIR/${file}.0.1 | awk '{if ($3 == "+") print $1"\t"$2"\t"$2+1"\t"$4"\t0\t"$3}' > $OUTDIR/${file}.softclip.polya.bed
@@ -49,25 +53,27 @@ for file in $(cat ${list}); do
 done
 
 ## find peak 
-echo find peak for all samples
+echo "`date '+%F %T'` Find peaks for polyA clusters of all samples!"
 for file in $(cat ${list}); do awk '{if ($6 == "+") print $1"\t"$2"\t"$3"\t"$4":"FILENAME"\t"$5"\t"$6;else print $1"\t"$2"\t"$3"\t"$4":"FILENAME"\t"$5"\t"$6}' ${file}.softclip.polya.cluster | sed 's/\.softclip.polya.cluster//g' | sed 's/^chr//g' | awk '{ if ($1 == "1" || $1 == "2" || $1 == "3" || $1 == "4" ||$1 =="5"||$1 == "6" ||$1 =="7" || $1 =="8"||$1=="9"||$1=="10"||$1=="11"||$1=="12"||$1=="13"||$1=="14"||$1=="15"||$1=="16"||$1=="17"||$1=="18"||$1=="19"||$1=="20"||$1=="21"||$1=="22"||$1=="X"||$1=="Y") print}' >> $OUTDIR/${cancer}.cluster.bed ; done
 sort -k1,1 -k2,2n $OUTDIR/${cancer}.cluster.bed > $OUTDIR/${cancer}.cluster.sorted.bed
-mergeBed -d 24 -s -i $OUTDIR/${cancer}.cluster.sorted.bed -c 4,5,6 -o collapse,sum,distinct > $OUTDIR/${cancer}.cluster.merged.bed
+"${bedtools}" merge -d 24 -s -i $OUTDIR/${cancer}.cluster.sorted.bed -c 4,5,6 -o collapse,sum,distinct > $OUTDIR/${cancer}.cluster.merged.bed
 for file in $(cat ${list}); do cat $OUTDIR/${file}.softclip.polya.bed | sed 's/^chr//g' >> $OUTDIR/${cancer}_all_SC_reads ; done
 perl findPeak.cluster.pl $OUTDIR/${cancer}.cluster.merged.bed $OUTDIR/${cancer}_all_SC_reads $OUTDIR/${cancer}.cluster.merged_withPeak.bed
-awk -F ',' '{if (NF >= 2 ) print }' $OUTDIR/${cancer}.cluster.merged_withPeak.bed | awk '{print "chr"$1"\t"$7"\t"$8"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed ##only keep the polyA clusters that supported by at least 2 samples for analyzing one cancer. But if there is only very few samples to be analyzed, then change it to one.
+awk -F ',' -v var="${num_of_sample_supporting}" '{if (NF >= var ) print }' $OUTDIR/${cancer}.cluster.merged_withPeak.bed | awk '{print "chr"$1"\t"$7"\t"$8"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed ##only keep the polyA clusters that supported by at least 2 samples for analyzing one cancer. But if there is only very few samples to be analyzed, then change it to one.
 
 ## extract only intron
-bedtools intersect -wa -wb -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed -b B.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
+"${bedtools}" intersect -wa -wb -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed -b B.hg19_intron.excluded.exon.bed | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
 #bedtools intersect -wa -wb -v -a $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed -b  gencode_PASs_extended_by_100_filtered > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1  ## filter the identified IPA with GENCODE annotation
 #bedtools intersect -wa -wb -v -a  $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered1 -b  A.splicing_coordinates_TCGA_12_cancers > $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered2  ## filter out the coordinates if has at least 6 junction reads
 #mv $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.bed_only_in_intron_filtered2  $OUTDIR/${cancer}.cluster.merged_withPeak.reliable.intron.bed
-faToTwoBit "$RefFile" hg19.2bit
+"${faToTwoBit}" "$RefFile" hg19.2bit
 ln -s "${RefFile}" ./
 
 ## HLA types
 for file in $(cat ${list}); do
 	id=$(echo "${file}" | cut -d "." -f1)
+        sed -i 's/\x27//g' "${OUTDIR}/${cancer}/${file}/${id}-ClassI-class.HLAgenotype4digits"
+        sed -i 's/\*//g' "${OUTDIR}/${cancer}/${file}/${id}-ClassI-class.HLAgenotype4digits"
 	{
                         read
                         while read -a line1; do
@@ -92,16 +98,16 @@ done
 
 for file in $(cat ${list}); do
 
-        BAM="${bam_path}/${file}"*".bam"
-        JUNCBED="${bam_path}/${file}"*"SJ.out.tab"
+        BAM="${OUTDIR}/${file}"*".bam"
+        JUNCBED="${OUTDIR}/${file}"*"SJ.out.tab"
         soft_clip_file="${OUTDIR}/${cancer}/${file}_potential_polyA_sites_from_softclipped_reads.txt"
-        STAR_final_output="${bam_path}/${file}"*"Log.final.out"
+        STAR_final_output="${OUTDIR}/${file}"*"Log.final.out"
         read_length=$(grep "Average input read length" $STAR_final_output | awk '{print $NF}')
 	grep "Uniquely mapped reads number" $STAR_final_output | awk '{print $NF}' > $OUTDIR/${file}.total.aligned.all.count
 
 	id=$(echo "${file}" | cut -d "." -f1)
 	hla1=$(cat ${id}.hla)
-#	N=24
+#	N=2
 #        if (( i % N == 0 )); then
 #                wait
 #        fi
@@ -116,7 +122,7 @@ for file in $(cat ${list}); do
 	awk '{if ($6 == "+") print $1"\t"$2-24"\t"$2+24"\t"$4"\t"$5"\t"$6;else print $1"\t"$3-24"\t"$3+24"\t"$4"\t"$5"\t"$6}' $OUTDIR/${file}.intron.clusterID.output > $OUTDIR/${file}.softclip.polya.win48
 
 ### calculate coverage 
-	echo calculate coverage 
+	echo "`date '+%F %T'` Calculate coverage for identified IPA events!"
 	echo -e "GeneID\tChr\tStart\tEnd\tStrand\t" > $OUTDIR/${file}.softclip.polya.ups100.SAF
 	echo -e "GeneID\tChr\tStart\tEnd\tStrand\t" > $OUTDIR/${file}.softclip.polya.dns100.SAF
 
@@ -139,32 +145,33 @@ for file in $(cat ${list}); do
 
 	echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.ups24.ss5.wo
 echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.dns24.ss3.wo
-	intersectBed -a $OUTDIR/${file}.softclip.polya.ups24 -b $OUTDIR/${file}.junction.ss5.bed -s -u >> $OUTDIR/${file}.softclip.polya.ups24.ss5.wo
-	intersectBed -a $OUTDIR/${file}.softclip.polya.dns24 -b $OUTDIR/${file}.junction.ss3.bed -s -u >> $OUTDIR/${file}.softclip.polya.dns24.ss3.wo
+	"${bedtools}" intersect -a $OUTDIR/${file}.softclip.polya.ups24 -b $OUTDIR/${file}.junction.ss5.bed -s -u >> $OUTDIR/${file}.softclip.polya.ups24.ss5.wo
+	"${bedtools}" intersect -a $OUTDIR/${file}.softclip.polya.dns24 -b $OUTDIR/${file}.junction.ss3.bed -s -u >> $OUTDIR/${file}.softclip.polya.dns24.ss3.wo
 
 ## filter with RPM and generate filtered tables
-	echo $OUTDIR ${file} ${read_length}
 	$rscript $generate_table $OUTDIR ${file} ${read_length}
 
 ## filter with the putative IPA transcripts found from TCGA normal, GTEx, BLUEPRINT normal samples, and GENCODE
-	bedtools intersect -wa -wb -v -a <(tail -n+2 $OUTDIR/${file}.ipa.table | sort -k6,6r -k1,1 -k2,2n) -b <(sort -k6,6r -k1,1 -k2,2n $installDIR/gencode_PASs_extended_by_100_filtered ) > $OUTDIR/${file}.ipa.filtered1.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered1.table -b $installDIR/IPA_events_from_GTEx_normal_for_filtering > $OUTDIR/${file}.ipa.filtered2.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered2.table -b $installDIR/IPA_events_from_tcga_normal_for_filtering > $OUTDIR/${file}.ipa.filtered3.table
-	bedtools intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
+	"${bedtools}" intersect -wa -wb -v -a <(tail -n+2 $OUTDIR/${file}.ipa.table | sort -k6,6r -k1,1 -k2,2n) -b <(sort -k6,6r -k1,1 -k2,2n $installDIR/gencode_PASs_extended_by_100_filtered ) > $OUTDIR/${file}.ipa.filtered1.table
+	"${bedtools}" intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered1.table -b $installDIR/IPA_events_from_GTEx_normal_for_filtering > $OUTDIR/${file}.ipa.filtered2.table
+	"${bedtools}"  intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered2.table -b $installDIR/IPA_events_from_tcga_normal_for_filtering > $OUTDIR/${file}.ipa.filtered3.table
+	"${bedtools}"  intersect -wa -wb -v -a $OUTDIR/${file}.ipa.filtered3.table -b $installDIR/IPA_events_from_blueprint_normal_for_filtering > $OUTDIR/${file}.ipa.filtered.table
 
 ## generate IPA derived peptide sequences
-	bedtools intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+.txt | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
-	bedtools intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  D.EncodeGencode_merged_intron_selected_excluded_exon_-.txt | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
+	echo "`date '+%F %T'` Generate IPA derived peptide sequences in Fasta format!"
+	"${bedtools}" intersect -wa -wb -a $OUTDIR/${file}.ipa.filtered.table  -b  C.EncodeGencode_merged_intron_selected_excluded_exon_+ | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_+_overlapped_with_${file}
+	"${bedtools}" intersect -wa -wb -a  $OUTDIR/${file}.ipa.filtered.table -b  D.EncodeGencode_merged_intron_selected_excluded_exon_- | awk '{if (($6 == "+" && $12 == "+") || ($6 == "-" && $12 == "-")) print}' |awk -F"\t" '!seen[$1, $2, $3, $6]++' > EncodeGencode_merged_intron_selected_-_overlapped_with_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "+") print $1,$2,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_+_overlapped_with_${file} > input_for_peptideseqs_of_1_${file}
 	awk -F'\t' -v OFS='\t' '{ if ($6 == "-") print $1,$3,$10,$13,$14,$15,$6,$5,$11,$4}' EncodeGencode_merged_intron_selected_-_overlapped_with_${file} >> input_for_peptideseqs_of_1_${file}
 	awk -F"\t" '!seen[$1, $2, $(NF-2), $(NF-1), $NF]++' input_for_peptideseqs_of_1_${file} > ${file}_input_for_peptideseqs_uniq
 	
-	"${python}" GeneratePeptide.py "${window}" "${OUTDIR}" ${file}_input_for_peptideseqs_uniq
+	"${python}" GeneratePeptide.py "${window}" "${OUTDIR}" ${file}_input_for_peptideseqs_uniq "${twoBitToFa}"
 	grep '>s=' peptideSeqsFASTA_${file}_input_for_peptideseqs_uniq.fa > peptideSeqsFASTA_${file}_input_for_peptideseqs_uniq_header
 	awk '{split($1,a,":|;|,"); if (sqrt((a[4]-a[2])^2) >= 48) print }' peptideSeqsFASTA_${file}_input_for_peptideseqs_uniq_header > ${file}_peptideSeqsFASTA_header_passed1 ## iPASs will be deleted if the distance to intron boundary is no more than 24
 	for entry in $(cat ${file}_peptideSeqsFASTA_header_passed1) ; do grep --no-group-separator "${entry}"$ peptideSeqsFASTA_${file}_input_for_peptideseqs_uniq.fa -A 1 >> peptideSeqsFASTA_with_SigDrop_${file}.fa ; done
 
 ## intronic neo-epitope prediction
+	echo "`date '+%F %T'` Intronic neo-epitope prediction!"
 	awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' $OUTDIR/peptideSeqsFASTA_with_SigDrop_${id}.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print ">s="$3"\t"$2}' | xargs -n1 > $OUTDIR/peptideSeqsFASTA_input_of_${id}
         awk '{ if (NR%2 != 0) line=$0; else {printf("%s\t%s\n", line, $0); line="";} } END {if (length(line)) print line;}' $OUTDIR/peptideSeqsFASTA_with_SigDrop_${id}.fa | awk -F'\t' 'NR>0{$0=$0"\t"NR-0} 1' | awk '{print "s_"$3"\t"substr($1,4,length($1))}' | sed 's/\tr/\tchr/g' > $OUTDIR/key_file_of_${id}
         "${netMHCpan}" -f $OUTDIR/peptideSeqsFASTA_input_of_${id} -inptype 0 -l ${window} -s -xls -xlsfile $OUTDIR/${id}_NETMHCpan_out.xls -a ${hla1} -BA > "$OUTDIR/logs/${id}"
@@ -185,16 +192,16 @@ echo -e "Chr\tStart\tEnd\tName\tScore\tStrand" > $OUTDIR/${file}.softclip.polya.
 
 	## filter with uniprot
         bash $installDIR/construct_fasta.sh $OUTDIR/${id}.reliables ${cancer} "${OUTDIR}"
-
         java -jar $installDIR/PeptideMatchCMD_1.0.jar -a query -i $installDIR/sprot_index_human/ -Q $OUTDIR/${id}.reliables.fa -e -o $OUTDIR/${id}.reliables.fa.out
+	awk 'BEGIN{print "Chromosom:Upstream exon-intron boundary;First stop codon encountered;IPA site\tStrand\tChromosome|Strand|NA|IPA site|Soft-clipped read number\tGeneName\t9-merIPA-derivedNeoantigen"}' >> $OUTDIR/${id}.reliables.filtered_by_uniprot.txt
+        for line in $(grep 'No match' $OUTDIR/${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ $OUTDIR/${id}.reliables >> $OUTDIR/${id}.reliables.filtered_by_uniprot.txt ; done
 
-        for line in $(grep 'No match' $OUTDIR/${id}.reliables.fa.out | cut -f1) ; do grep --no-group-separator "${line}"$ $OUTDIR/${id}.reliables >> $OUTDIR/${id}.reliables.filtered_by_uniprot ; done
-	
 	line_num=$(cat "${id}".reliables.fa.out|wc -l)
-        if [ "${line_num}" -lt "3" ]; then
-                echo ${id} has no IPA neoantigens!
-        else
-                echo ${id} IPA neoantigen prediction finished.
-        fi
+	if [ "${line_num}" -lt "3" ]; then
+	        echo ${id} has no IPA neoantigens!
+	else
+        	echo ${id} IPA neoantigen found. Please refer to "${id}.reliables.filtered_by_uniprot.txt" file for details
+	fi
+
 #        ) &
 done

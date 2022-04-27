@@ -8,19 +8,18 @@ STAR_library=`grep Star_Lib run.configure | sed s/.*\=//`
 list=`grep fileList run.configure | sed s/.*\=//`
 mkdir -p "${path}"/"${dataset_name}"
 cd ${path}/"${dataset_name}"
-rename s/fq.gz/fastq.gz/ *
 
 for line in $(tac ${list}); do
 #	if [ ! -f "${path}/${dataset_name}/${line}_potential_polyA_sites_from_softclipped_reads.txt" ]; then
-#		N=24
+#		N=2
 #        	if (( i % N == 0 )); then
 #                	wait
 #        	fi
 #	        ((i++))
 #		(
-		file1=$(find "$fastq_bam_path" -name "${line}*_1*fastq.gz")
-                file2=$(find "$fastq_bam_path" -name "${line}*_2*fastq.gz")
-		"$STAR" --genomeDir "$STAR_library" --runThreadN 24 --limitBAMsortRAM 100000000000 --limitIObufferSize 1000000000 1000000000 --readFilesIn "$file1" "$file2" --outSAMtype BAM Unsorted --outFileNamePrefix "$path/$line" --readFilesCommand zcat
+                file1=$(find "$fastq_bam_path" -type f -name "${line}*_1*fastq.gz")
+                file2=$(find "$fastq_bam_path" -type f -name "${line}*_2*fastq.gz")
+		"$STAR" --genomeDir "$STAR_library" --runThreadN 80 --limitBAMsortRAM 100000000000 --limitIObufferSize 1000000000 1000000000 --readFilesIn "$file1" "$file2" --outSAMtype BAM Unsorted --outFileNamePrefix "$path/$line" --readFilesCommand zcat
 		perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}"
                 perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}" 
 #		) &
