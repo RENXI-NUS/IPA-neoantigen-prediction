@@ -19,7 +19,7 @@ In order to run, please:
     D: File of intron boundaries with frame information from negative strand
 4) Download reference files "_c_Lucene41_0.pos" and "_c_Lucene41_0.doc" from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing, and put them into the IPA-neoantigen-prediction/sprot_index_human folder
 5) Configure the run.configure file according to the instruction of each input.
-6) Ensure all the scripts are executable (chmod +x *) and start the pipeline with run.sh file.
+6) Ensure all the scripts are executable (chmod +x *) and **start the pipeline with run.sh file** (A small test dataset is located at the "_example_" folder, where expected output files are provided).
 
 
 
@@ -33,6 +33,7 @@ In order to run, please:
     Bio.Seq
 3) R (tested on v4.1.2) dependencies (install the latest versions available): 
     dplyr
+    caroline
 4) Perl (tested on v5.26.2)
 5) Software tested version (install tested version: _**conda install -c bioconda bedtools=2.23.0**_):
 
