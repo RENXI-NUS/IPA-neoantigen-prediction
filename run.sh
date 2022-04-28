@@ -37,4 +37,4 @@ done
 echo "`date '+%F %T'` IPA neoantigen prediction has finished!"
 
 cd ${output_dir}
-rm headermap_* peptideSeqs* *reliables.fa* *reliables *_out* *counts.txt* *half_sequence* tmp_* key_* *_header* EncodeGencode* *ipa*table *wo *dns24 *ups24 *bed *count *summary *SAF *win48 *clusterID* *hla
+rm headermap_* peptideSeqs* *reliables.fa* *reliables *_out* *counts.txt* *half_sequence* tmp_* key_* *_header* EncodeGencode* *ipa*table *wo *dns24 *ups24 *bed *count *SAF *win48 *clusterID* *hla >> "$logs/log.txt" 2>&1
