@@ -17,7 +17,7 @@ RefFile=`grep RefFile run.configure | sed s/.*\=//`
 
 mkdir $OUTDIR
 cd $installDIR
-cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_- C.EncodeGencode_merged_intron_selected_excluded_exon_+ callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
+cp findPeak.cluster.pl D.EncodeGencode_merged_intron_selected_excluded_exon_-.txt C.EncodeGencode_merged_intron_selected_excluded_exon_+.txt callCluster.pl gencode_PASs_extended_by_100_filtered A.splicing_coordinates_TCGA_12_cancers B.hg19_intron.excluded.exon.bed GeneratePeptide.py $OUTDIR
 
 list=`grep fileList run.configure | sed s/.*\=//`
 generate_table="${installDIR}/generate_ipa_table.R"
