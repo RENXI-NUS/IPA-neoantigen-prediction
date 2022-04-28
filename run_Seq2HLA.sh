@@ -21,7 +21,7 @@ for line in $(cat ${list}); do
 #		(
 		file1=$(find "$fastq_bam_path" -name "${line}*_1*fastq.gz")
                 file2=$(find "$fastq_bam_path" -name "${line}*_2*fastq.gz")
-		"$python_script" "$seq2HLA" -1 "${file1}" -2 "${file2}" -r "${path}/${dataset_name}/$line/$line" -p 80 -3 3
+		"$python_script" "$seq2HLA" -1 "${file1}" -2 "${file2}" -r "${path}/${dataset_name}/$line/$line" -p 12 -3 3
 #		) &
 #	fi
 done
