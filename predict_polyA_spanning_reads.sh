@@ -19,7 +19,7 @@ for line in $(tac ${list}); do
 #		(
                 file1=$(find "$fastq_bam_path" -type f -name "${line}*_1*fastq.gz")
                 file2=$(find "$fastq_bam_path" -type f -name "${line}*_2*fastq.gz")
-		"$STAR" --genomeDir "$STAR_library" --runThreadN 80 --limitBAMsortRAM 100000000000 --limitIObufferSize 1000000000 1000000000 --readFilesIn "$file1" "$file2" --outSAMtype BAM Unsorted --outFileNamePrefix "$path/$line" --readFilesCommand zcat
+		"$STAR" --genomeDir "$STAR_library" --runThreadN 20 --limitBAMsortRAM 100000000000 --limitIObufferSize 1000000000 1000000000 --readFilesIn "$file1" "$file2" --outSAMtype BAM Unsorted --outFileNamePrefix "$path/$line" --readFilesCommand zcat
 		perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyT_beginning_based_on_S.pl "${path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}"
                 perl ${current_path}/detect_from_soft_cliping_with_bam_file_polyA_end_based_on_S.pl "${path}/${line}Aligned.out.bam" "${path}/${dataset_name}/${line}" 
 #		) &
