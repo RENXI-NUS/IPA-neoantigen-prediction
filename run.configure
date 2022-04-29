@@ -4,7 +4,7 @@ installDIR=/media/ext4/liming/bin/software/IPA-neoantigen-prediction
 ##provide peptide length (The length of peptide to be used for binding affinity prediction, and must be from 8 to 14 amino acids)
 peptide_length=9
 
-##specify the number of samples supporting the polyA sites (only keep the polyA clusters that supported by at least 2 samples for analyzing one cancer. If there are only less than 5 samples to be analyzed, change it to one)
+##specify the number of samples supporting the polyA sites (When analyzing large-scale datasets, only keep the polyA clusters that supported by at least 2 samples. If there are only less than five samples to be analyzed, change it to one)
 num_of_samples_supporting=1
 
 ##dataset name (the dataset name of this prediction):
@@ -49,5 +49,5 @@ faToTwoBit=/media/ext4/liming/bin/anaconda3/bin/faToTwoBit
 ##provide full path of twoBittoFa
 twoBitToFa=/media/ext4/liming/bin/anaconda3/bin/twoBitToFa
 
-##provide full path for bedtools (tested with v2.23.0, install: conda install -c bioconda bedtools=2.23.0)
+##provide full path for bedtools (tested with v2.23.0, install v2.23.0: conda install -c bioconda bedtools=2.23.0)
 Bedtools=/media/ext4/liming/bin/anaconda3/bin/bedtools
