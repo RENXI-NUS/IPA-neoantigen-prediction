@@ -10,7 +10,7 @@ This pipeline can predict the IPA-derived neoantigens based on large-scale RNA-s
 
 In order to run, please:
 1) Download and install bedtools v2.23.0 (https://bedtools.readthedocs.io/en/latest/content/installation.html or conda install -c bioconda bedtools=2.23.0), featureCounts v2.0.1 (http://subread.sourceforge.net/), NetMHCPan-4.0 (http://www.cbs.dtu.dk/services/NetMHCpan/) and Seq2HLA v2.2 (https://github.com/TRON-Bioinformatics/seq2HLA).
-2) Download twoBitToFa and faToTwoBit utilities from UCSC genome browser (https://genome.ucsc.edu/goldenpath/help/twoBit.html) or install directly from conda for twoBitToFa (conda install -c bioconda ucsc-twobittofa) and faToTwoBit (conda install -c bioconda ucsc-fatotwobit).
+2) Download twoBitToFa and faToTwoBit utilities from UCSC genome browser (https://genome.ucsc.edu/goldenpath/help/twoBit.html). Alternatively, install directly with anaconda for twoBitToFa (conda install -c bioconda ucsc-twobittofa) and faToTwoBit (conda install -c bioconda ucsc-fatotwobit).
 3) Download all the four reference files from https://drive.google.com/drive/folders/1otsrhoVvqL-XHElO4LI_pVd1Aij1CVrk?usp=sharing, and put them into the IPA-neoantigen-prediction folder.
 
     A: Splicing junction coordinates derived from patients of TCGA cancers. This file could be customizedly generated and substituted by processing the STAR output files ending *.sj.out.tab    
