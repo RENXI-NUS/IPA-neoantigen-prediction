@@ -40,7 +40,7 @@ seq2HLA_script=/media/ext4/liming/bin/software/seq2HLA/seq2HLA.py
 ##provide the full path of R (please install dplyr and caroline packages before running the pipeline)
 rscript=/usr/bin/Rscript
 
-##software to count the reads from RNA-seq
+##software to count the reads from RNA-seq (tested with featureCounts v2.0.1. Please be noted that v1.XX would not have --splitOnly option for counting the exon-spanning reads)
 featureCounts=/media/ext4/liming/bin/anaconda3/envs/py2/bin/featureCounts
 
 ##provide full path of faTotwoBit
