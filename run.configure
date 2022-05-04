@@ -49,5 +49,5 @@ faToTwoBit=/media/ext4/liming/bin/anaconda3/bin/faToTwoBit
 ##provide full path of twoBittoFa
 twoBitToFa=/media/ext4/liming/bin/anaconda3/bin/twoBitToFa
 
-##provide full path for bedtools (tested with v2.23.0, install v2.23.0: conda install -c bioconda bedtools=2.23.0)
+##provide full path for bedtools (tested with v2.23.0, install v2.23.0: conda install -c bioconda bedtools=2.23.0. Please be noted that v2.26.0 would have an output format problem when using bedtools merge)
 Bedtools=/media/ext4/liming/bin/anaconda3/bin/bedtools
