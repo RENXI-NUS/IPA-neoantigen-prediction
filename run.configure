@@ -13,7 +13,7 @@ dataset_name=Testing
 ##provide the list of file names
 fileList=/media/ext4/liming/bin/software/IPA-neoantigen-prediction/example/list
 
-##full path for the bam files and raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
+##full path for raw fastq files (RNA-seq data with high sequencing depth are preferred if there are only very few samples to be analyzed):
 fastq_bam_dir=/media/ext4/liming/bin/software/IPA-neoantigen-prediction/example
 
 ##outputfile path (STRING without space):
