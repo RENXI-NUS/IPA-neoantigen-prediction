@@ -16,7 +16,7 @@ return $sum/@array; # divide sum by the number of elements in the
 # array to find the mean
 }
 
-open(my $IN, "-|", "samtools view -F 4 $sam_file") || die $!;
+open(my $IN, "-|", "samtools view -F 4 -f 0x2 $sam_file") || die $!;
 open(OUT, ">>$out_PAS_file")or die $!;
 my $line1 = <$IN>;
 my $line2 = <$IN>;
