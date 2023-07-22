@@ -56,7 +56,7 @@ if($field1[0] eq $field2[0]){
 		my $seq = substr($field1[9],$index);
                 print OUT $field1[2];
                 print OUT "\t";
-                print OUT ($field1[3]+$index);
+                print OUT ($field1[3]);
                 print OUT "\t";
                 print OUT "-";
                 print OUT "\t";
@@ -114,7 +114,7 @@ $line2 = <$IN>;
 		my $seq = substr($field1[9],$index);
                 print OUT $field1[2];
                 print OUT "\t";
-                print OUT ($field1[3]+$index);
+                print OUT ($field1[3]);
                 print OUT "\t";
                 print OUT "-";
                 print OUT "\t";
