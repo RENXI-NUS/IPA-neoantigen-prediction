@@ -32,10 +32,15 @@ $line2 = <$IN>;
 }
 else{
 if($field1[0] eq $field2[0]){
-	if ($field2[5] =~ /(([3-9]|[1-9]\d)S)$/){
+		if ($field2[5] =~ /(([3-9]|[1-9]\d)S)$/){
 		my $index = $1;
 		$index =~ s/\D//g;
 	        if ($field2[9] =~ /(A)\1{3,40}$/){
+		if ($field2[5] =~ /^(([1-9]|[1-9]\d)S)/){
+		$line1=<$IN>;
+                $line2=<$IN>;
+                }
+                else{
 		if ($field2[1] & 256) {
 		$line1=<$IN>;
 		$line2=<$IN>;
@@ -73,6 +78,7 @@ if($field1[0] eq $field2[0]){
 		$line2=<$IN>;
 		}
 		}
+		}	
 		}
 		}
 		else{
@@ -89,10 +95,15 @@ elsif($field1[0] ne $field2[0]) {
 $line1 = $line2;
 $line2 = <$IN>;
 	if($field1[0] eq $field2[0]){
-	if ($field2[5] =~ /(([3-9]|[1-9]\d)S)$/){
+		if ($field2[5] =~ /(([3-9]|[1-9]\d)S)$/){
 		my $index = $1;
                 $index =~ s/\D//g;
 		if ($field2[9] =~ /(A)\1{3,40}$/){
+		if ($field2[5] =~ /^(([1-9]|[1-9]\d)S)/){
+                $line1=<$IN>;
+                $line2=<$IN>;
+                }
+                else{
 		if ($field2[1] & 256) {
                 $line1=<$IN>;
                 $line2=<$IN>;
@@ -130,6 +141,7 @@ $line2 = <$IN>;
 		$line2=<$IN>;
 		}
 		}
+		}	
 		}
 		}
 		else{
